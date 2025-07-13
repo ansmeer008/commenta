@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/global.css";
 import localFont from "next/font/local";
+import { SimpleModalRenderer } from "@/components/ui/simpleModalRenderer";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={pretendard.className}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SimpleModalRenderer />
+      </body>
     </html>
   );
 }
