@@ -40,11 +40,11 @@ export default function RootLayout({
 
   return (
     <html lang="ko" className={pretendard.className}>
-      <body>
-        <div className="min-h-screen max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
+      <body className="overflow-hidden h-screen">
+        <div className="min-h-screen max-w-screen-xl px-4 sm:px-6 lg:px-8 py-6 h-full flex flex-col">
           <NavigationMenu
-            className="flex w-full rounded-sm
-            shadow-sm
+            className="flex rounded-sm
+            shadow-sm bg-white
             "
           >
             <NavigationMenuList className="p-4">
@@ -60,7 +60,9 @@ export default function RootLayout({
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          {children}
+          <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
+            {children}
+          </div>
         </div>
         <SimpleModalRenderer />
       </body>

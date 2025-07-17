@@ -17,10 +17,7 @@ function NavigationMenu({
     <NavigationMenuPrimitive.Root
       data-slot="navigation-menu"
       data-viewport={viewport}
-      className={cn(
-        "group/navigation-menu relative flex flex-1 items-center justify-start",
-        className
-      )}
+      className={cn("group/navigation-menu relative flex items-center justify-start", className)}
       {...props}
     >
       {children}
