@@ -2,14 +2,10 @@ import type { Metadata } from "next";
 import "@/styles/global.css";
 import localFont from "next/font/local";
 import { SimpleModalRenderer } from "@/components/ui/simpleModalRenderer";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+import { NavigationMenu } from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
-import { cn } from "@/lib/utils";
+import React from "react";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -24,16 +20,22 @@ const pretendard = localFont({
 
 export default function RootLayout({
   children,
+  auth,
 }: Readonly<{
   children: React.ReactNode;
+  auth: React.ReactNode;
 }>) {
   const navMenuList = [
     {
-      title: "home",
+      title: "Recommend",
+      href: "/",
+    },
+    {
+      title: "Commentaries",
       href: "/commentaries",
     },
     {
-      title: "myPage",
+      title: "MyPage",
       href: "/my",
     },
   ];
@@ -41,27 +43,24 @@ export default function RootLayout({
   return (
     <html lang="ko" className={pretendard.className}>
       <body className="overflow-hidden h-screen">
-        <div className="min-h-screen max-w-screen-xl px-4 sm:px-6 lg:px-8 py-6 h-full flex flex-col">
+        <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-6 h-full flex flex-col">
           <NavigationMenu
-            className="flex rounded-sm
-            shadow-sm bg-white
+            className="flex bg-white border-b-2
             "
           >
-            <NavigationMenuList className="p-4">
+            <ul className="p-4 flex justify-between w-full">
               {navMenuList.map((menu, index) => (
-                <NavigationMenuItem
-                  key={menu.title}
-                  className={cn("px-4 py-2", index !== navMenuList.length - 1 && "border-r-2")}
-                >
+                <li key={menu.title} className="px-4 py-2">
                   <NavigationMenuLink asChild>
                     <Link href={menu.href}>{menu.title}</Link>
                   </NavigationMenuLink>
-                </NavigationMenuItem>
+                </li>
               ))}
-            </NavigationMenuList>
+            </ul>
           </NavigationMenu>
           <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
             {children}
+            {auth}
           </div>
         </div>
         <SimpleModalRenderer />
