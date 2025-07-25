@@ -60,9 +60,9 @@ export default function RootLayout({
           </NavigationMenu>
           <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
             {children}
-            {auth}
           </div>
         </div>
+        {auth}
         <SimpleModalRenderer />
       </body>
     </html>
