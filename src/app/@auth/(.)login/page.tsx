@@ -4,11 +4,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useRouteModal } from "@/hooks/useRouteModal";
 
 export default function LoginModal() {
-  const { isOpen, handleClose } = useRouteModal();
+  const { isOpen } = useRouteModal();
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="!bg-white !shadow-lg !rounded-md !w-full !max-w-sm !p-6 !fixed left-1/2 top-1/2 !-translate-x-1/2 !-translate-y-1/2 z-50">
+    <Dialog open={isOpen}>
+      <DialogContent
+        showCloseButton={false}
+        className="bg-white shadow-lg rounded-md w-full max-w-lg p-6 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+      >
         <DialogHeader>
           <DialogTitle>로그인 모달</DialogTitle>
         </DialogHeader>

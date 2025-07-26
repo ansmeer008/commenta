@@ -77,8 +77,6 @@ export default function Commentaries() {
           <CommentaryList commentaryList={mockList} />
         </div>
       </main>
-
-      <footer className="mt-16 text-center text-sm text-gray-500">© Commenta</footer>
     </div>
   );
 }
