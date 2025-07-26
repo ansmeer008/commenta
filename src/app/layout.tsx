@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import "@/styles/global.css";
 import localFont from "next/font/local";
 import { SimpleModalRenderer } from "@/components/ui/simpleModalRenderer";
-import { NavigationMenu } from "@/components/ui/navigation-menu";
-import Link from "next/link";
-import { NavigationMenuLink } from "@radix-ui/react-navigation-menu";
 import React from "react";
+import { Navigation } from "@/components/Navigation";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -43,21 +41,8 @@ export default function RootLayout({
   return (
     <html lang="ko" className={pretendard.className}>
       <body className="overflow-hidden h-screen">
-        <div className="min-h-screen px-4 sm:px-6 lg:px-8 py-6 h-full flex flex-col">
-          <NavigationMenu
-            className="flex bg-white border-b-2
-            "
-          >
-            <ul className="p-4 flex justify-between w-full">
-              {navMenuList.map((menu, index) => (
-                <li key={menu.title} className="px-4 py-2">
-                  <NavigationMenuLink asChild>
-                    <Link href={menu.href}>{menu.title}</Link>
-                  </NavigationMenuLink>
-                </li>
-              ))}
-            </ul>
-          </NavigationMenu>
+        <div className="min-h-screen sm:px-6 lg:px-8 py-6 h-full flex flex-col">
+          <Navigation />
           <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
             {children}
           </div>
