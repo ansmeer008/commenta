@@ -9,7 +9,7 @@ export const Navigation = () => {
 
   const navMenuList = [
     {
-      title: "Recommend",
+      title: "Home",
       href: "/",
     },
     {
@@ -22,12 +22,18 @@ export const Navigation = () => {
     },
   ];
 
+  const checkActiveMenu = (pathname: string, href: string) => {
+    const home = ["/", "/login"];
+    return home.includes(pathname)
+      ? href === "/"
+      : pathname.startsWith(href + "/") || pathname === href;
+  };
+
   return (
     <NavigationMenu className="flex bg-white">
       <ul className="flex justify-between w-full border-b-2 border-b-gray-100">
         {navMenuList.map(menu => {
-          const isActive = pathname === menu.href;
-
+          const isActive = checkActiveMenu(pathname, menu.href);
           return (
             <li key={menu.title} className="flex-1 flex justify-center  hover:bg-gray-100 pt-2 ">
               <NavigationMenuLink asChild>
