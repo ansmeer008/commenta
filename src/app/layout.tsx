@@ -3,8 +3,8 @@ import "@/styles/global.css";
 import localFont from "next/font/local";
 import { SimpleModalRenderer } from "@/components/ui/simpleModalRenderer";
 import React from "react";
-import { Navigation } from "@/components/Navigation";
-import AuthLayout from "../components/authLayout";
+import { Navigation } from "@/components/navigation/Navigation";
+import AuthLayout from "../components/auth/authLayout";
 
 export const metadata: Metadata = {
   title: "Commenta",

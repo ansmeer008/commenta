@@ -1,6 +1,6 @@
 "use client";
 
-import { CommentaryDetail } from "@/components/CommentaryDetail";
+import { CommentaryDetail } from "@/components/commentary/CommentaryDetail";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { use } from "react";

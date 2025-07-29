@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { CommentaryImage } from "./CommentaryImage";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Badge } from "./ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
 
 export const CommentaryItem = ({

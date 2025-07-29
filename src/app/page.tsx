@@ -1,6 +1,6 @@
 "use client";
 
-import { CommentaryList } from "@/components/CommentaryList";
+import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -77,8 +77,11 @@ export default function Home() {
           로그인
         </Button>
       </div>
-      <h2 className="text-2xl font-bold pt-4">실시간 코멘터리</h2>
-      <CommentaryList commentaryList={recommendCommentaryList} />
+
+      <div className="px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl font-bold pt-4">실시간 코멘터리</h2>
+        <CommentaryList commentaryList={recommendCommentaryList} />
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { CommentaryDetail } from "@/components/CommentaryDetail";
+import { CommentaryDetail } from "@/components/commentary/CommentaryDetail";
 import { use } from "react";
 
 //harn navigation 시 보여줄 코멘터리 상세페이지

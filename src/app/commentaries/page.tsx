@@ -1,6 +1,6 @@
 "use client";
 
-import { CommentaryList } from "@/components/CommentaryList";
+import { CommentaryList } from "@/components/commentary/CommentaryList";
 
 export default function Commentaries() {
   const mockList = [
