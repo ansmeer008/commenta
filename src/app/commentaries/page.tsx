@@ -1,8 +1,11 @@
 "use client";
 
 import { CommentaryList } from "@/components/commentary/CommentaryList";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function Commentaries() {
+  const router = useRouter();
   const mockList = [
     {
       id: "1",
@@ -66,6 +69,10 @@ export default function Commentaries() {
     },
   ];
 
+  const openCreateCommentaryModal = () => {
+    router.push(`/commentaries/create`);
+  };
+
   return (
     <div className="min-h-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <header className="mb-8">
@@ -73,6 +80,9 @@ export default function Commentaries() {
       </header>
 
       <main>
+        <div className="flex justify-end">
+          <Button onClick={openCreateCommentaryModal}> 작성하기</Button>
+        </div>
         <div>
           <CommentaryList commentaryList={mockList} />
         </div>
