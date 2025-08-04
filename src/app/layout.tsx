@@ -5,6 +5,7 @@ import { SimpleModalRenderer } from "@/components/ui/simpleModalRenderer";
 import React from "react";
 import { Navigation } from "@/components/navigation/Navigation";
 import AuthLayout from "../components/auth/authLayout";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -30,13 +31,13 @@ export default function RootLayout({
         <div className="min-h-screen sm:px-6 lg:px-8 py-6 h-full flex flex-col">
           <Navigation />
           <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
-            {/* <AuthLayout>{children}</AuthLayout> */}
-            {children}
+            <AuthLayout>{children}</AuthLayout>
           </div>
           <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer>
         </div>
         {auth}
         <SimpleModalRenderer />
+        <Toaster />
       </body>
     </html>
   );

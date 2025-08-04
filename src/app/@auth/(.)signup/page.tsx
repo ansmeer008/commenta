@@ -1,6 +1,6 @@
 "use client";
 
-import LoginForm from "@/components/auth/loginForm";
+import SignUpForm from "@/components/auth/signUpForm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useRouteModal } from "@/hooks/useRouteModal";
 
-export default function LoginModal() {
+export default function SignUpModal() {
   const { isOpen, handleClose } = useRouteModal();
 
   const closeModal = () => {
@@ -27,14 +27,14 @@ export default function LoginModal() {
           className="bg-white shadow-lg rounded-md w-full max-w-lg p-6 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
         >
           <DialogHeader className="flex-row justify-between items-center">
-            <DialogTitle>로그인 모달</DialogTitle>
+            <DialogTitle>회원가입 모달</DialogTitle>
             <DialogClose asChild>
               <Button type="button" variant="ghost" onClick={closeModal}>
                 X
               </Button>
             </DialogClose>
           </DialogHeader>
-          <LoginForm close={handleClose} />
+          <SignUpForm close={closeModal} />
         </DialogContent>
       </DialogOverlay>
     </Dialog>

@@ -2,25 +2,32 @@
 
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const setIsLoggedIn = useAuthStore(state => state.setIsLoggedIn);
+  const setUser = useAuthStore(state => state.setUser);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (pathname === "/" || pathname === "/login") return;
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      if (pathname === "/" || pathname === "/login") return;
 
-    const token = localStorage.getItem("accessToken");
-    const isLoggedIn = !!token;
+      if (user) {
+        setIsLoggedIn(true);
+        setUser(user);
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+        router.push("/login");
+      }
+    });
 
-    setIsLoggedIn(isLoggedIn);
-
-    if (!isLoggedIn) {
-      router.push("/login");
-    }
-  }, [pathname, setIsLoggedIn]);
+    return () => unsubscribe();
+  }, [pathname, setIsLoggedIn, setUser, router]);
 
   return <>{children}</>;
 }

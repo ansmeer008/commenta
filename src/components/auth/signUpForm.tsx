@@ -1,14 +1,16 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { useForm } from "@/hooks/useForm";
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export default function LoginForm({ close }: { close?: () => void }) {
+export default function SignUpForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
   const { values, handleChange } = useForm({
     email: "",
@@ -16,27 +18,38 @@ export default function LoginForm({ close }: { close?: () => void }) {
   });
   const router = useRouter();
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     try {
       if (!values.email.length || !values.password.length) {
-        return toast("check email or password");
+        return toast("이메일과 비밀번호를 입력해주세요.");
       }
 
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      console.log("로그인 성공:", userCredential.user);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      console.log("회원가입 성공:", userCredential.user);
+
+      toast("회원가입 완료! 자동 로그인 중...");
       setErrorMsg("");
+
       if (close) {
         close();
       }
+
+      // 회원가입 후 자동 로그인 → 리디렉션
       router.push("/my");
     } catch (error: any) {
-      console.error("로그인 실패:", error);
-      setErrorMsg("이메일 또는 비밀번호를 다시 확인해주세요.");
+      console.error("회원가입 실패:", error);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMsg("이미 등록된 이메일입니다.");
+      } else if (error.code === "auth/weak-password") {
+        setErrorMsg("비밀번호는 6자 이상이어야 합니다.");
+      } else {
+        setErrorMsg("회원가입 중 오류가 발생했습니다.");
+      }
     }
-  };
-
-  const goSignUp = () => {
-    router.push("/signup");
   };
 
   return (
@@ -45,8 +58,8 @@ export default function LoginForm({ close }: { close?: () => void }) {
         <Label htmlFor="email">ID</Label>
         <Input
           id="email"
-          type="email"
           name="email"
+          type="email"
           value={values.email}
           onChange={handleChange}
           placeholder="example@email.com"
@@ -62,13 +75,8 @@ export default function LoginForm({ close }: { close?: () => void }) {
 
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
 
-        <p className="text-sm text-gray-700">아직 가입 전이라면?</p>
-        <Button size="lg" onClick={goSignUp}>
-          회원 가입 하러 가기
-        </Button>
-
-        <Button size="lg" onClick={handleLogin}>
-          로그인
+        <Button size="lg" onClick={handleSignUp}>
+          회원가입
         </Button>
       </div>
     </div>
