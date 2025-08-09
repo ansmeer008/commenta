@@ -35,17 +35,22 @@ export const CommentaryItem = ({
 
   return (
     <div className={`flex justify-between py-8 ${className}`} onClick={openDetailCommentaryModal}>
-      <div className="flex-col flex-1">
-        <div>
-          <Avatar className="flex-1">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+      <div className="flex flex-col flex-1 gap-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2 items-center">
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <span className="font-bold">{author}</span>
+            <span className="text-xs text-gray-500">3분전</span>
+          </div>
           <div>
-            <span>{author}</span>
             <div className="flex gap-0.5">
               {genre.map(item => (
-                <Badge key={item}>{item}</Badge>
+                <Badge key={item} variant="secondary">
+                  {item}
+                </Badge>
               ))}
             </div>
           </div>

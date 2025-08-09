@@ -2,6 +2,7 @@
 
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 
 const recommendCommentaryList = [
@@ -69,14 +70,18 @@ const recommendCommentaryList = [
 
 export default function Home() {
   const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+
   return (
     <div className="flex flex-col w-full py-6 h-full">
-      <div className="flex flex-col gap-4 justify-center items-center w-full py-8 border-b-2">
-        <h2 className="text-2xl font-bold">다양한 사람들과 더 많은 코멘터리를 즐기고 싶다면</h2>
-        <Button className="w-3/6" onClick={() => router.push("/login")}>
-          로그인
-        </Button>
-      </div>
+      {!isLoggedIn && (
+        <div className="flex flex-col gap-4 justify-center items-center w-full py-8 border-b-2">
+          <h2 className="text-2xl font-bold">다양한 사람들과 더 많은 코멘터리를 즐기고 싶다면</h2>
+          <Button className="w-3/6" onClick={() => router.push("/login")}>
+            로그인
+          </Button>
+        </div>
+      )}
 
       <div className="px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold pt-4">실시간 코멘터리</h2>

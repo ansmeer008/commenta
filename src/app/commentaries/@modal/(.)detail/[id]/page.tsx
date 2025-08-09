@@ -12,11 +12,11 @@ export default function CommentaryDetailModal(props: { params: Promise<{ id: str
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="!bg-white !shadow-lg !rounded-md !w-full !max-w-sm !p-6 !fixed left-1/2 top-1/2 !-translate-x-1/2 !-translate-y-1/2 z-50">
+      <DialogContent className="!bg-white !shadow-lg !rounded-md !w-[90%] !max-w-sm !p-6 !fixed left-1/2 top-1/2 !-translate-x-1/2 !-translate-y-1/2 z-50">
         <DialogHeader>
           <DialogTitle>코멘터리 상세 페이지 모달</DialogTitle>
         </DialogHeader>
-        <CommentaryDetail id={id} />
+        <CommentaryDetail id={id} isModal={true} />
       </DialogContent>
     </Dialog>
   );

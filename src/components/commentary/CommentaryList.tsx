@@ -21,7 +21,7 @@ export const CommentaryList = ({ commentaryList }: { commentaryList: Commentary[
         <CommentaryItem
           key={commentary.id}
           {...commentary}
-          className={`${index < commentaryList.length - 1 ? "border-b border-gray-300" : ""}`}
+          className={`${index < commentaryList.length - 1 ? "border-b border-gray-300" : ""} cursor-pointer`}
         />
       ))}
     </div>

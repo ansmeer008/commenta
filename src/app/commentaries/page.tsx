@@ -1,6 +1,7 @@
 "use client";
 
 import { CommentaryList } from "@/components/commentary/CommentaryList";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -75,15 +76,43 @@ export default function Commentaries() {
 
   return (
     <div className="min-h-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <header className="mb-8">
+      <header className="flex justify-between mb-8">
         <h1 className="text-3xl font-bold">둘러보기</h1>
+        <Button onClick={openCreateCommentaryModal}> 작성하기</Button>
       </header>
 
       <main>
-        <div className="flex justify-end">
-          <Button onClick={openCreateCommentaryModal}> 작성하기</Button>
-        </div>
         <div>
+          {/* TODO filter */}
+          <div className="flex overflow-x-auto gap-2 pb-4">
+            <Badge size="lg" variant="default">
+              All
+            </Badge>
+            <Badge size="lg" variant="outline">
+              데못죽
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+            <Badge size="lg" variant="outline">
+              괴담출근
+            </Badge>
+          </div>
           <CommentaryList commentaryList={mockList} />
         </div>
       </main>
