@@ -4,6 +4,8 @@ import { CommentaryImage } from "./CommentaryImage";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
+import { EllipsisVertical } from "lucide-react";
+import { Button } from "../ui/button";
 
 export const CommentaryItem = ({
   id,
@@ -14,6 +16,7 @@ export const CommentaryItem = ({
   className,
   genre,
   isSpoiler,
+  isAuthor,
 }: {
   id: string;
   imgUrl?: string;
@@ -23,6 +26,7 @@ export const CommentaryItem = ({
   className: string;
   genre: string[]; //중복 등록 가능하게 해두는 게 나을지도..
   isSpoiler?: boolean;
+  isAuthor?: boolean;
 }) => {
   const [showPreview, setShowPreview] = useState();
   const router = useRouter();
@@ -37,13 +41,20 @@ export const CommentaryItem = ({
     <div className={`flex justify-between py-8 ${className}`} onClick={openDetailCommentaryModal}>
       <div className="flex flex-col flex-1 gap-2">
         <div className="flex flex-col gap-2">
-          <div className="flex gap-2 items-center">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <span className="font-bold">{author}</span>
-            <span className="text-xs text-gray-500">3분전</span>
+          <div className="flex justify-between">
+            <div className="flex gap-2 items-center">
+              <Avatar>
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <span className="font-bold">{author}</span>
+              <span className="text-xs text-gray-500">3분전</span>
+            </div>
+            {isAuthor && (
+              <Button variant="ghost">
+                <EllipsisVertical size={16} />
+              </Button>
+            )}
           </div>
           <div>
             <div className="flex gap-0.5">
