@@ -6,15 +6,17 @@ import { Button } from "../ui/button";
 import { useForm } from "@/hooks/useForm";
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function SignUpForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
   const { values, handleChange } = useForm({
     email: "",
     password: "",
+    nickname: "",
   });
   const router = useRouter();
 
@@ -29,7 +31,18 @@ export default function SignUpForm({ close }: { close?: () => void }) {
         values.email,
         values.password
       );
+
       console.log("회원가입 성공:", userCredential.user);
+
+      const userDoc = doc(db, "users", userCredential.user.uid);
+      await setDoc(userDoc, {
+        uid: userCredential.user.uid,
+        email: values.email,
+        nickname: values.nickname,
+        createdAt: new Date().toISOString(),
+        subscribeCategory: [],
+        isNoSpoilerMode: false,
+      });
 
       toast("회원가입 완료! 자동 로그인 중...");
       setErrorMsg("");
@@ -70,6 +83,15 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           name="password"
           type="password"
           value={values.password}
+          onChange={handleChange}
+        />
+
+        <Label htmlFor="nickname">Nickname</Label>
+        <Input
+          id="nickname"
+          name="nickname"
+          type="nickname"
+          value={values.nickname}
           onChange={handleChange}
         />
 

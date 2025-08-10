@@ -9,6 +9,7 @@ interface Category {
   author: string;
   createdAt: Date;
   usageCount: number;
+  subscribeCount: number;
 }
 
 export const CategorySearch = ({
@@ -25,6 +26,7 @@ export const CategorySearch = ({
       author: "백덕수",
       createdAt: new Date(),
       usageCount: 13984,
+      subscribeCount: 12312,
     },
   ];
 

@@ -1,12 +1,19 @@
 import { create } from "zustand";
-import { User } from "firebase/auth";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
+export interface UserData {
+  uid: string;
+  email: string;
+  nickname: string;
+  createdAt: Date;
+  subscribeCategory: string[];
+  isNoSpoilerMode: boolean;
+}
 interface AuthState {
-  user: User | null;
+  user: UserData | null;
   isLoggedIn: boolean | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: UserData | null) => void;
   setIsLoggedIn: (value: boolean) => void;
   logout: () => Promise<boolean>;
 }
