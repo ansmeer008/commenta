@@ -1,14 +1,12 @@
 "use client";
 
 import { CommentaryList } from "@/components/commentary/CommentaryList";
+import { NoSpoilerModeSection } from "@/components/my/NoSpoilerModeSection";
+import { SubscibeSection } from "@/components/my/SubscribeSection";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { useAuthStore } from "@/store/authStore";
-import { EllipsisVertical, Flame, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const mockList = [
   {
@@ -46,7 +44,6 @@ const mockList = [
 export default function MyPage() {
   const { user, logout } = useAuthStore();
   const router = useRouter();
-  const [isNoSpoilerMode, setIsNoSpoilerMode] = useState(true);
 
   //TODO:: 추후 user API를 통해 상세 유저 정보를 가져오도록 한다
 
@@ -69,64 +66,20 @@ export default function MyPage() {
       </header>
 
       <main className="flex flex-col gap-6">
-        {/* TODO:: 프로필 영역 */}
         <div className="flex items-center gap-4">
           <Avatar className="size-20">
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 
-          <span className="font-bold text-lg">zerobase1zzanghao</span>
+          <div className="flex flex-col">
+            <span className="font-bold text-lg">{user?.nickname}</span>
+            <span className="text-base text-gray-500">{user?.email}</span>
+          </div>
         </div>
         <div className="flex flex-col gap-4 md:flex-row">
-          <div className="flex flex-col border-1 rounded-lg p-4 flex-1">
-            <div className="flex justify-between items-center">
-              <div className="font-bold">
-                <span className="mr-1 font-normal">스포일러 방지 모드</span>
-                {isNoSpoilerMode ? (
-                  <span className="text-green-500">켰어요</span>
-                ) : (
-                  <span className="text-red-600">껐어요</span>
-                )}
-              </div>
-              <Switch
-                checked={isNoSpoilerMode}
-                onCheckedChange={checked => {
-                  setIsNoSpoilerMode(checked);
-                }}
-              />
-            </div>
-            <p className="text-xs text-gray-300">지정한 회차 이상의 코멘터리는 노출되지 않습니다</p>
-          </div>
-          <div className="flex flex-col gap-2 border-1 rounded-lg p-4 flex-1">
-            <div className="flex flex-col">
-              <div className="flex justify-between items-center">
-                <span className="text-base font-bold">나의 구독</span>
-                <Button type="button" variant="ghost">
-                  <EllipsisVertical size={20} />
-                </Button>
-              </div>
-              <p className="text-xs text-gray-500">
-                언급이 많은 작품에는 활활 타오르는 표시가 붙어요
-              </p>
-            </div>
-            {/* TODO:: 알록달록..? */}
-            <div className="flex flex-wrap gap-2">
-              <Badge size="lg">
-                <Flame size={14} color="red" fill="red" />
-                데못죽(백덕수)
-              </Badge>
-              <Badge size="lg">
-                <Flame size={14} color="red" fill="red" />
-                괴담출근(백덕수)
-              </Badge>
-              <Badge size="lg">어두운바다의등불이되어(연산호)</Badge>
-              <Badge size="lg">
-                <Plus size={10} />
-                10
-              </Badge>
-            </div>
-          </div>
+          <NoSpoilerModeSection />
+          <SubscibeSection subscribeList={mockList} />
         </div>
         <div className="flex flex-col gap-2 rounded-lg p-4">
           <p className="text-lg font-bold">내가 쓴 코멘터리</p>

@@ -7,6 +7,7 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { CategorySearch } from "../category/CategorySearch";
+import { Badge } from "../ui/badge";
 
 export const WriteCommentaryForm = () => {
   const { values, handleChange, reset } = useForm({
@@ -19,11 +20,21 @@ export const WriteCommentaryForm = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <CategorySearch
-        categoryClickAction={selected => {
-          console.log(selected);
-        }}
-      />
+      <div className="flex flex-col gap-0.5">
+        <p className="text-xs font-bold">선택된 작품</p>
+        {/* 이미 입력된 작품이 있는 경우 작품명(작가명, 출판사) 요렇게 보여주기 */}
+        {/* 이러면 작품은 한 개만 등록할 수 있어야 할듯! */}
+        <div className="flex flex-wrap gap-2">
+          <Badge>
+            데뷔못하면죽는병걸림(백덕수)
+            <button onClick={() => {}}>x</button>
+          </Badge>
+        </div>
+      </div>
+      <div className="flex flex-col gap-0.5 ">
+        <p className="text-xs font-bold">작품 찾기</p>
+        <CategorySearch />
+      </div>
       <div className="flex flex-col gap-2 items-end">
         <Textarea
           className="resize-none h-30"

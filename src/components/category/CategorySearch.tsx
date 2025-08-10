@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
+import { ListPlus } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface Category {
   id: string;
@@ -12,11 +13,7 @@ interface Category {
   subscribeCount: number;
 }
 
-export const CategorySearch = ({
-  categoryClickAction,
-}: {
-  categoryClickAction: (category: Category) => void;
-}) => {
+export const CategorySearch = ({ className }: { className?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const categoryList = [
@@ -34,43 +31,51 @@ export const CategorySearch = ({
   const handleCustomContent = () => {};
 
   return (
-    <div>
-      <div className="releative w-full">
+    <div className={className}>
+      <div className="relative w-full">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-0.5">
-            <p className="text-xs font-bold">선택된 작품</p>
-            {/* 이미 입력된 작품이 있는 경우 작품명(작가명, 출판사) 요렇게 보여주기 */}
-            {/* 이러면 작품은 한 개만 등록할 수 있어야 할듯! */}
-            <div className="flex flex-wrap gap-2">
-              <Badge>
-                데뷔못하면죽는병걸림(백덕수)
-                <button onClick={() => {}}>x</button>
-              </Badge>
-            </div>
-          </div>
-          {/* 검색어 입력 */}
-          <div className="flex flex-col gap-0.5 ">
-            <p className="text-xs font-bold">작품 찾기</p>
-            <Input
-              onChange={e => {
-                setSearch(e.target.value);
-              }}
-              onFocus={() => setIsOpen(true)}
-              onBlur={() => setIsOpen(false)}
-            />
-          </div>
+          <Input
+            placeholder="원하는 작품을 찾아보세요"
+            onChange={e => {
+              setSearch(e.target.value);
+            }}
+            onFocus={() => setIsOpen(true)}
+            onBlur={() => setIsOpen(false)}
+          />
         </div>
         {isOpen && (
-          <ul className="absolute bg-amber-50">
+          <ul className="absolute bg-gray-100 z-10 left-0 right-0 rounded-b-md shadow-2xs">
             {categoryList.map((item: Category) => {
               return (
-                <li>
-                  {item.title}({item.author})
+                <li key={item.id} className="p-2 flex justify-between">
+                  <div>
+                    <p>
+                      {item.title}({item.author})
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      언급 {item.usageCount}회, 구독 {item.subscribeCount}회
+                    </p>
+                  </div>
+                  <div>
+                    <Button
+                      variant="ghost"
+                      onClick={e => {
+                        e.stopPropagation();
+                        console.log("click");
+                      }}
+                      onMouseDown={e => e.preventDefault()}
+                    >
+                      <span className="text-xs text-gray-700">구독하기</span>
+                      <ListPlus size={20} />
+                    </Button>
+                  </div>
                 </li>
               );
             })}
             {/* 데이터가 없는 경우 '직접입력하기 버튼' */}
-            <li onClick={handleCustomContent}>직접 입력하기</li>
+            <li className="p-2" onClick={handleCustomContent}>
+              직접 입력하기
+            </li>
           </ul>
         )}
       </div>

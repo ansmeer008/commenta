@@ -11,7 +11,14 @@ import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function SimpleModalRenderer() {
-  const { type, message, closeModal, buttonList, closeOnOutsideClick = true } = useModalStore();
+  const {
+    type,
+    message,
+    closeModal,
+    customContent,
+    buttonList,
+    closeOnOutsideClick = true,
+  } = useModalStore();
   const close = useModalStore.getState().closeModal;
   const isOpen = type !== null;
 
@@ -33,6 +40,7 @@ export function SimpleModalRenderer() {
         </DialogHeader>
 
         {message && <p className="text-sm">{message}</p>}
+        {customContent}
 
         <DialogFooter>
           {buttonList?.length > 0 &&
