@@ -16,7 +16,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async user => {
-      if (pathname === "/" || pathname === "/login" || pathname === "signup") return;
+      const publicPaths = ["/", "/login", "/signup"];
+
+      if (publicPaths.includes(pathname)) return;
 
       if (user) {
         setIsLoggedIn(true);

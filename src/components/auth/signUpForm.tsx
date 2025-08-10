@@ -85,7 +85,6 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           value={values.password}
           onChange={handleChange}
         />
-
         <Label htmlFor="nickname">Nickname</Label>
         <Input
           id="nickname"
@@ -94,7 +93,6 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           value={values.nickname}
           onChange={handleChange}
         />
-
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
 
         <Button size="lg" onClick={handleSignUp}>

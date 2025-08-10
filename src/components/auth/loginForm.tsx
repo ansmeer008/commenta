@@ -28,7 +28,7 @@ export default function LoginForm({ close }: { close?: () => void }) {
       if (close) {
         close();
       }
-      router.push("/my");
+      router.replace("/my");
     } catch (error: any) {
       console.error("로그인 실패:", error);
       setErrorMsg("이메일 또는 비밀번호를 다시 확인해주세요.");

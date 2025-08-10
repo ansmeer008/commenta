@@ -13,11 +13,7 @@ import {
 import { useRouteModal } from "@/hooks/useRouteModal";
 
 export default function LoginModal() {
-  const { isOpen, handleClose } = useRouteModal();
-
-  const closeModal = () => {
-    handleClose();
-  };
+  const { isOpen, close } = useRouteModal();
 
   return (
     <Dialog open={isOpen}>
@@ -29,12 +25,12 @@ export default function LoginModal() {
           <DialogHeader className="flex-row justify-between items-center">
             <DialogTitle>로그인 모달</DialogTitle>
             <DialogClose asChild>
-              <Button type="button" variant="ghost" onClick={closeModal}>
+              <Button type="button" variant="ghost" onClick={close}>
                 X
               </Button>
             </DialogClose>
           </DialogHeader>
-          <LoginForm close={handleClose} />
+          <LoginForm close={close} />
         </DialogContent>
       </DialogOverlay>
     </Dialog>

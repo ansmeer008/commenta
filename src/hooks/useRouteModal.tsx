@@ -14,13 +14,14 @@ export function useRouteModal() {
     return () => close();
   }, []);
 
-  const handleClose = () => {
+  const closeWithRouterBack = () => {
     close();
     router.back();
   };
 
   return {
+    close,
     isOpen,
-    handleClose,
+    closeWithRouterBack,
   };
 }
