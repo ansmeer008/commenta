@@ -58,17 +58,15 @@ export default function LoginForm({ close }: { close?: () => void }) {
           type="password"
           value={values.password}
           onChange={handleChange}
+          placeholder="비밀번호를 입력해주세요"
         />
 
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
-
-        <p className="text-sm text-gray-700">아직 가입 전이라면?</p>
-        <Button size="lg" onClick={goSignUp}>
-          회원 가입 하러 가기
-        </Button>
-
         <Button size="lg" onClick={handleLogin}>
           로그인
+        </Button>
+        <Button size="lg" onClick={goSignUp}>
+          회원 가입 하러 가기
         </Button>
       </div>
     </div>

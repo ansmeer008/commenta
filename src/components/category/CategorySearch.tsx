@@ -49,7 +49,7 @@ const SearchList = ({ list }: { list: Category[] }) => {
           </li>
         );
       })}
-      {/* 데이터가 없는 경우 '직접입력하기 버튼' */}
+
       <li
         className="flex justify-center items-center gap-2 p-2 cursor-pointer bg-gray-50 rounded-b-lg"
         onClick={handleCustomContent}

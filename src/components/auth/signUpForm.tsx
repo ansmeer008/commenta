@@ -84,6 +84,7 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           type="password"
           value={values.password}
           onChange={handleChange}
+          placeholder="비밀번호를 입력하세요"
         />
         <Label htmlFor="nickname">Nickname</Label>
         <Input
@@ -92,6 +93,7 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           type="nickname"
           value={values.nickname}
           onChange={handleChange}
+          placeholder="닉네임을 입력하세요"
         />
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -14,11 +14,26 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const router = useRouter();
 
+  const firstCallSkipped = useRef(false);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async user => {
       const publicPaths = ["/", "/login", "/signup"];
 
-      if (publicPaths.includes(pathname)) return;
+      if (publicPaths.includes(pathname)) {
+        return;
+      }
+
+      //첫번째 call을 스킵한다 onAuthStateChanged의 첫 시도에서 user는 null
+      if (!firstCallSkipped.current) {
+        firstCallSkipped.current = true;
+        if (user) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+        return;
+      }
 
       if (user) {
         setIsLoggedIn(true);

@@ -6,7 +6,6 @@ import React from "react";
 import { Navigation } from "@/components/navigation/Navigation";
 import AuthLayout from "../components/auth/authLayout";
 import { Toaster } from "@/components/ui/sonner";
-import { CategorySearch } from "@/components/category/CategorySearch";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -30,7 +29,6 @@ export default function RootLayout({
     <html lang="ko" className={pretendard.className}>
       <body className="overflow-hidden h-screen">
         <div className="min-h-screen sm:px-6 lg:px-8 py-6 h-full flex flex-col">
-          <CategorySearch className={"px-8 py-2"} />
           <Navigation />
           <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
             <AuthLayout>{children}</AuthLayout>
