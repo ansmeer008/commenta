@@ -5,11 +5,13 @@ import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { useForm } from "@/hooks/useForm";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { doc, setDoc } from "firebase/firestore";
+import axios from "axios";
+import { fetchUserData } from "@/apis/userData";
+import { useAuthStore } from "@/store/authStore";
 
 export default function SignUpForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
@@ -22,36 +24,39 @@ export default function SignUpForm({ close }: { close?: () => void }) {
 
   const handleSignUp = async () => {
     try {
-      if (!values.email.length || !values.password.length) {
-        return toast("이메일과 비밀번호를 입력해주세요.");
+      if (!values.email || !values.password || !values.nickname) {
+        return toast("모든 필드를 입력해주세요.");
       }
 
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-
-      console.log("회원가입 성공:", userCredential.user);
-
-      const userDoc = doc(db, "users", userCredential.user.uid);
-      await setDoc(userDoc, {
-        uid: userCredential.user.uid,
+      const { data } = await axios.post("/api/auth/signup", {
         email: values.email,
+        password: values.password,
         nickname: values.nickname,
-        createdAt: new Date().toISOString(),
-        subscribeCategory: [],
-        isNoSpoilerMode: false,
       });
 
-      toast("회원가입 완료! 자동 로그인 중...");
-      setErrorMsg("");
-
-      if (close) {
-        close();
+      if (!data?.uid) {
+        // 서버에서 예상치 못한 응답이 온 경우
+        toast("회원가입에 실패했습니다.");
+        return;
       }
 
+      toast("회원가입 완료! 자동 로그인 중...");
+
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+
+      const userData = await fetchUserData(data.uid);
+      console.log({ userData });
+      if (userData) {
+        useAuthStore.getState().setIsLoggedIn(true);
+        useAuthStore.getState().setUser(userData);
+
+        console.log({ state: useAuthStore.getState() });
+      }
+
+      setErrorMsg("");
+      if (close) close();
       // 회원가입 후 자동 로그인 → 리디렉션
+      console.log("going my~");
       router.push("/my");
     } catch (error: any) {
       console.error("회원가입 실패:", error);

@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const mockList = [
   {
@@ -44,8 +45,6 @@ const mockList = [
 export default function MyPage() {
   const { user, logout } = useAuthStore();
   const router = useRouter();
-
-  //TODO:: 추후 user API를 통해 상세 유저 정보를 가져오도록 한다
 
   const handleLogout = async () => {
     const success = await logout();

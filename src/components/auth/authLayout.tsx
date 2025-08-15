@@ -14,40 +14,28 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const router = useRouter();
 
-  const firstCallSkipped = useRef(false);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async user => {
-      const publicPaths = ["/", "/login", "/signup"];
-
-      if (publicPaths.includes(pathname)) {
-        return;
-      }
-
-      //첫번째 call을 스킵한다 onAuthStateChanged의 첫 시도에서 user는 null
-      if (!firstCallSkipped.current) {
-        firstCallSkipped.current = true;
-        if (user) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-        return;
-      }
-
+      console.log({ user, isLogin: useAuthStore.getState().isLoggedIn });
       if (user) {
         setIsLoggedIn(true);
         const userData = await fetchUserData(user.uid);
-        if (!userData) {
+        if (userData) {
+          setUser(userData);
+        } else {
+          console.log("here?");
           toast.error("유저 정보를 찾지 못했습니다. 로그인 페이지로 이동합니다.");
           setIsLoggedIn(false);
           setUser(null);
           router.push("/login");
         }
       } else {
+        console.log("here????????");
         setIsLoggedIn(false);
         setUser(null);
-        router.push("/login");
+        if (!["/", "/login", "/signup"].includes(pathname)) {
+          router.push("/login");
+        }
       }
     });
 

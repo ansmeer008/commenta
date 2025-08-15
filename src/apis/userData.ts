@@ -1,21 +1,20 @@
-import { db } from "@/lib/firebase";
 import { UserData, useAuthStore } from "@/store/authStore";
-import { getDoc, doc } from "firebase/firestore";
+import axios from "axios";
 
 // 유저 데이터 조회
 export const fetchUserData = async (uid: string): Promise<UserData | null> => {
   const setUser = useAuthStore.getState().setUser;
 
   try {
-    const userSnap = await getDoc(doc(db, "users", uid));
+    const res = await axios.get(`/api/users/${uid}`);
 
-    if (!userSnap.exists()) {
-      console.warn(`User ${uid} not found in Firestore`);
+    if (res.status !== 200 || !res.data) {
+      console.warn(`User ${uid} not found`);
       return null;
     }
 
-    setUser(userSnap.data() as UserData);
-    return userSnap.data() as UserData;
+    setUser(res.data as UserData);
+    return res.data as UserData;
   } catch (error) {
     console.error("Error fetching user data:", error);
     return null;

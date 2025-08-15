@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { toast } from "sonner";
 
 export interface UserData {
   uid: string;
@@ -27,10 +28,10 @@ export const useAuthStore = create<AuthState>(set => ({
     try {
       await signOut(auth);
       set({ user: null, isLoggedIn: false });
-      console.log("로그아웃 성공");
+      toast("로그아웃 성공");
       return true;
     } catch (error) {
-      console.error("로그아웃 실패:", error);
+      toast(`로그아웃 실패: ${error}`);
       return false;
     }
   },

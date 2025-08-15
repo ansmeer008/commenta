@@ -13,10 +13,10 @@ import {
 import { useRouteModal } from "@/hooks/useRouteModal";
 
 export default function SignUpModal() {
-  const { isOpen, closeWithRouterBack } = useRouteModal();
+  const { isOpen, close } = useRouteModal();
 
   const closeModal = () => {
-    closeWithRouterBack();
+    close();
   };
 
   return (
