@@ -1,6 +1,5 @@
 "use client";
 import { useForm } from "@/hooks/useForm";
-import { useTags } from "@/hooks/useTags";
 import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
@@ -8,32 +7,70 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { CategorySearch } from "../category/CategorySearch";
 import { Badge } from "../ui/badge";
+import { createCommentary } from "@/apis/commentaries";
+import { Category } from "@/apis/category";
+import { useAuthStore } from "@/store/authStore";
+import { toast } from "sonner";
 
-export const WriteCommentaryForm = () => {
+export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
   const { values, handleChange, reset } = useForm({
     content: "",
   });
-  const { tags, addTag, removeTag, resetTags } = useTags([]);
+  const { user } = useAuthStore();
+  const [category, setCategory] = useState<Category | null>(null);
   const [isSpoiler, setIsSpoiler] = useState(false);
 
-  //validation : content는 하나만 가능, 코멘터리 내용은 다섯자 이상이어야 한다
+  const handleSubmit = async () => {
+    //TODO:: refactoring states handle, need form validation
+    //TODO:: spoiler, episode handle
+    if (user && category) {
+      const res = await createCommentary({
+        authorId: user.uid,
+        authorNickName: user.nickname,
+        categoryId: category.id,
+        content: values.content,
+        categoryTitle: category.title,
+      });
+
+      if (res) {
+        toast("코멘터리가 등록되었습니다!");
+        close();
+      }
+    } else if (!category) {
+      toast("작품을 등록해주세요");
+    } else if (!user) {
+      toast("유저 정보를 찾을 수 없습니다.");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-0.5">
         <p className="text-xs font-bold">선택된 작품</p>
-        {/* 이미 입력된 작품이 있는 경우 작품명(작가명, 출판사) 요렇게 보여주기 */}
-        {/* 이러면 작품은 한 개만 등록할 수 있어야 할듯! */}
         <div className="flex flex-wrap gap-2">
-          <Badge>
-            데뷔못하면죽는병걸림(백덕수)
-            <button onClick={() => {}}>x</button>
-          </Badge>
+          {category ? (
+            <Badge>
+              {category.title}({category.author})
+              <button
+                onClick={() => {
+                  setCategory(null);
+                }}
+              >
+                x
+              </button>
+            </Badge>
+          ) : (
+            <span className="text-xs text-gray-400">아래에서 작품을 선택해주세요</span>
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-0.5 ">
         <p className="text-xs font-bold">작품 찾기</p>
-        <CategorySearch />
+        <CategorySearch
+          selectHandler={category => {
+            setCategory(category);
+          }}
+        />
       </div>
       <div className="flex flex-col gap-2 items-end">
         <Textarea
@@ -58,7 +95,9 @@ export const WriteCommentaryForm = () => {
         </div>
         <p className="text-xs">스포일러 안내 문구를 표시할 수 있습니다</p>
       </div>
-      <Button size="lg">코멘터리 등록하기</Button>
+      <Button size="lg" onClick={handleSubmit}>
+        코멘터리 등록하기
+      </Button>
     </div>
   );
 };

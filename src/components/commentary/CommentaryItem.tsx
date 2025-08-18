@@ -7,30 +7,19 @@ import { useRouter } from "next/navigation";
 import { EllipsisVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouteModal } from "@/hooks/useRouteModal";
+import { Commentary } from "@/apis/commentaries";
 
 export const CommentaryItem = ({
   id,
   imgUrl,
-  title,
   content,
-  author,
+  authorId,
+  authorNickName,
+  categoryTitle,
   className,
-  genre,
   isSpoiler,
   isAuthor,
-}: {
-  id: string;
-  imgUrl?: string;
-  title: string;
-  content: string;
-  author: string;
-  className: string;
-  genre: string[]; //중복 등록 가능하게 해두는 게 나을지도..
-  isSpoiler?: boolean;
-  isAuthor?: boolean;
-}) => {
-  const [showPreview, setShowPreview] = useState();
-  const router = useRouter();
+}: Commentary & { className: string; isAuthor: boolean }) => {
   const { openRouteModal } = useRouteModal();
 
   const preview = content.length > 30 ? `${content.slice(0, 30)}...` : content;
@@ -49,7 +38,7 @@ export const CommentaryItem = ({
                 <AvatarImage src="https://github.com/shadcn.png" />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <span className="font-bold">{author}</span>
+              <span className="font-bold">{authorNickName}</span>
               <span className="text-xs text-gray-500">3분전</span>
             </div>
             {isAuthor && (
@@ -60,16 +49,11 @@ export const CommentaryItem = ({
           </div>
           <div>
             <div className="flex gap-0.5">
-              {genre.map(item => (
-                <Badge key={item} variant="secondary">
-                  {item}
-                </Badge>
-              ))}
+              <Badge variant="secondary">{categoryTitle}</Badge>
             </div>
           </div>
         </div>
         <div className="">
-          <p>{title}</p>
           <p>{preview}</p>
         </div>
       </div>

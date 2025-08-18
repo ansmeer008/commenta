@@ -9,7 +9,13 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useForm } from "@/hooks/useForm";
 
-const SearchList = ({ list }: { list: Category[] }) => {
+const SearchList = ({
+  list,
+  selectHandler,
+}: {
+  list: Category[];
+  selectHandler?: (select: Category) => void;
+}) => {
   const { open, close } = useSimpleModal();
 
   const handleCustomContent = () => {
@@ -38,11 +44,15 @@ const SearchList = ({ list }: { list: Category[] }) => {
                 variant="ghost"
                 onClick={e => {
                   e.stopPropagation();
-                  console.log("click");
+                  if (selectHandler) {
+                    selectHandler(item);
+                  }
                 }}
                 onMouseDown={e => e.preventDefault()}
               >
-                <span className="text-xs text-gray-700">구독하기</span>
+                <span className="text-xs text-gray-700">
+                  {selectHandler ? "선택하기" : "구독하기"}
+                </span>
                 <ListPlus size={20} />
               </Button>
             </div>
@@ -67,6 +77,7 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
     author: "",
   });
 
+  // TODO:: check if duplicated tag
   const handleSave = async () => {
     const { title, author } = values;
     if (title.length && author.length) {
@@ -94,7 +105,13 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
   );
 };
 
-export const CategorySearch = ({ className }: { className?: string }) => {
+export const CategorySearch = ({
+  className,
+  selectHandler,
+}: {
+  className?: string;
+  selectHandler?: (select: Category) => void;
+}) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -122,10 +139,21 @@ export const CategorySearch = ({ className }: { className?: string }) => {
             onChange={e => {
               setSearch(e.target.value);
             }}
+            value={search ?? ""}
             onFocus={() => setIsOpen(true)}
           />
         </div>
-        {isOpen && <SearchList list={categoryList} />}
+        {isOpen && (
+          <SearchList
+            list={categoryList}
+            selectHandler={category => {
+              if (selectHandler) {
+                selectHandler(category);
+                setSearch("");
+              }
+            }}
+          />
+        )}
       </div>
       <Button
         className="flex-1/5 md:flex-1/8"

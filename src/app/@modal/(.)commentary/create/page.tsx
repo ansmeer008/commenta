@@ -15,7 +15,7 @@ export default function CommentaryCreateModal() {
         <DialogHeader>
           <DialogTitle>코멘터리 작성하기</DialogTitle>
         </DialogHeader>
-        <WriteCommentaryForm />
+        <WriteCommentaryForm close={closeWithRouterBack} />
       </DialogContent>
     </Dialog>
   );
