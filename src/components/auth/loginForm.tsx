@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useRouteModal } from "@/hooks/useRouteModal";
 
 export default function LoginForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
@@ -15,6 +16,7 @@ export default function LoginForm({ close }: { close?: () => void }) {
     password: "",
   });
   const router = useRouter();
+  const { openRouteModal } = useRouteModal();
 
   const handleLogin = async () => {
     try {
@@ -36,7 +38,7 @@ export default function LoginForm({ close }: { close?: () => void }) {
   };
 
   const goSignUp = () => {
-    router.push("/signup");
+    openRouteModal("/signup");
   };
 
   return (

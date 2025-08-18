@@ -6,6 +6,7 @@ import { Badge } from "../ui/badge";
 import { useRouter } from "next/navigation";
 import { EllipsisVertical } from "lucide-react";
 import { Button } from "../ui/button";
+import { useRouteModal } from "@/hooks/useRouteModal";
 
 export const CommentaryItem = ({
   id,
@@ -30,11 +31,12 @@ export const CommentaryItem = ({
 }) => {
   const [showPreview, setShowPreview] = useState();
   const router = useRouter();
+  const { openRouteModal } = useRouteModal();
 
   const preview = content.length > 30 ? `${content.slice(0, 30)}...` : content;
 
   const openDetailCommentaryModal = () => {
-    router.push(`/commentaries/detail/${id}`);
+    openRouteModal(`/commentary/${id}`);
   };
 
   return (

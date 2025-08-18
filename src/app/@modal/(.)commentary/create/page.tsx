@@ -3,13 +3,14 @@
 import { WriteCommentaryForm } from "@/components/commentary/WriteCommentaryForm";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useRouteModal } from "@/hooks/useRouteModal";
+import { usePathname } from "next/navigation";
 
-//soft navigation 시 보여줄 코멘터리 작성 페이지
 export default function CommentaryCreateModal() {
-  const { isOpen, closeWithRouterBack } = useRouteModal();
+  const { isOpen, modalId, closeWithRouterBack } = useRouteModal();
+  const pathName = usePathname();
 
   return (
-    <Dialog open={isOpen} onOpenChange={closeWithRouterBack}>
+    <Dialog open={isOpen && pathName === modalId} onOpenChange={closeWithRouterBack}>
       <DialogContent className="bg-white shadow-lg rounded-md w-full max-w-xl p-6 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         <DialogHeader>
           <DialogTitle>코멘터리 작성하기</DialogTitle>

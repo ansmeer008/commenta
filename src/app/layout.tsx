@@ -20,10 +20,10 @@ const pretendard = localFont({
 
 export default function RootLayout({
   children,
-  auth,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
-  auth: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="ko" className={pretendard.className}>
@@ -35,7 +35,7 @@ export default function RootLayout({
           </div>
           <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer>
         </div>
-        {auth}
+        {modal}
         <SimpleModalRenderer />
         <Toaster />
       </body>

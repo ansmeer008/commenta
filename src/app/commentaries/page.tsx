@@ -3,10 +3,10 @@
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouteModal } from "@/hooks/useRouteModal";
 
 export default function Commentaries() {
-  const router = useRouter();
+  const { openRouteModal } = useRouteModal();
   const mockList = [
     {
       id: "1",
@@ -71,7 +71,7 @@ export default function Commentaries() {
   ];
 
   const openCreateCommentaryModal = () => {
-    router.push(`/commentaries/create`);
+    openRouteModal("/commentary/create");
   };
 
   return (

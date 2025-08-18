@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useRouteModalStore } from "@/store/routeModal";
 
 export function useRouteModal() {
   const router = useRouter();
-  const { isOpen, open, close } = useRouteModalStore();
+  const { isOpen, modalId, open, close } = useRouteModalStore();
 
-  useEffect(() => {
-    open();
-    return () => close();
-  }, []);
+  const openRouteModal = (path: string) => {
+    console.log(path);
+    open(path);
+    router.push(path);
+  };
 
   const closeWithRouterBack = () => {
     close();
@@ -19,8 +19,10 @@ export function useRouteModal() {
   };
 
   return {
+    modalId,
     close,
     isOpen,
+    openRouteModal,
     closeWithRouterBack,
   };
 }

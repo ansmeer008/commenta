@@ -45,18 +45,13 @@ export default function SignUpForm({ close }: { close?: () => void }) {
       await signInWithEmailAndPassword(auth, values.email, values.password);
 
       const userData = await fetchUserData(data.uid);
-      console.log({ userData });
       if (userData) {
         useAuthStore.getState().setIsLoggedIn(true);
         useAuthStore.getState().setUser(userData);
-
-        console.log({ state: useAuthStore.getState() });
       }
 
       setErrorMsg("");
       if (close) close();
-      // 회원가입 후 자동 로그인 → 리디렉션
-      console.log("going my~");
       router.push("/my");
     } catch (error: any) {
       console.error("회원가입 실패:", error);

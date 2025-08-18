@@ -2,6 +2,7 @@
 
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { Button } from "@/components/ui/button";
+import { useRouteModal } from "@/hooks/useRouteModal";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 
@@ -71,6 +72,7 @@ const recommendCommentaryList = [
 export default function Home() {
   const router = useRouter();
   const { isLoggedIn } = useAuthStore();
+  const { openRouteModal } = useRouteModal();
 
   return (
     <div className="flex flex-col w-full py-6 h-full">
@@ -79,7 +81,7 @@ export default function Home() {
           <h2 className="text-2xl font-bold text-center">
             다양한 사람들과 더 많은 코멘터리를 즐기고 싶다면
           </h2>
-          <Button className="w-3/6" onClick={() => router.push("/login")}>
+          <Button className="w-3/6" onClick={() => openRouteModal("/login")}>
             로그인
           </Button>
         </div>

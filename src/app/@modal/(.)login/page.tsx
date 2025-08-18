@@ -11,12 +11,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouteModal } from "@/hooks/useRouteModal";
+import { usePathname } from "next/navigation";
 
 export default function LoginModal() {
-  const { isOpen, close, closeWithRouterBack } = useRouteModal();
-  console.log("login", { isOpen });
+  const { isOpen, modalId, close, closeWithRouterBack } = useRouteModal();
+  const pathname = usePathname();
+
   return (
-    <Dialog open={isOpen}>
+    <Dialog open={isOpen && modalId === pathname}>
       <DialogOverlay>
         <DialogContent
           showCloseButton={false}

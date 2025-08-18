@@ -11,11 +11,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouteModal } from "@/hooks/useRouteModal";
+import { useRouter } from "next/navigation";
 
 export default function SignUpModal() {
   const { isOpen, close } = useRouteModal();
+  const router = useRouter();
 
   const closeModal = () => {
+    router.replace("/");
     close();
   };
 
