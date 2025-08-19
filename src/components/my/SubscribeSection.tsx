@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
 
-//TODO:: props category data interface 교체
+//TODO:: props category data interface 교체 (최대 10개까지 구독 가능하도록 해야함)
 export const SubscibeSection = ({ subscribeList }: { subscribeList: any[] }) => {
   const { open } = useSimpleModal();
 

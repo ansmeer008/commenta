@@ -2,19 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
 import { Timestamp } from "firebase-admin/firestore";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { categoryId?: string; authorId?: string } }
-) {
+export async function GET(req: NextRequest) {
   try {
+    const searchParams = req.nextUrl.searchParams;
+
+    const categoryIds = searchParams.getAll("categoryIds[]");
+
     let query: FirebaseFirestore.Query = adminDb.collection("commentaries");
 
     // 조건별 쿼리 조합
-    if (params?.categoryId) {
-      query = query.where("categoryId", "==", params.categoryId);
-    }
-    if (params?.authorId) {
-      query = query.where("authorId", "==", params.authorId);
+    if (categoryIds.length > 0) {
+      query = query.where("categoryId", "in", categoryIds.slice(0, 10)); // 최대 10개
     }
 
     const snapshot = await query.orderBy("createdAt", "desc").get();

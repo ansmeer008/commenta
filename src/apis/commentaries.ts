@@ -14,13 +14,10 @@ export interface Commentary {
   updatedAt: Date;
 }
 
-export const getCommentaryList = async (
-  categoryId?: string,
-  authorId?: string
-): Promise<Commentary[] | null> => {
+export const getCommentaryList = async (categoryIds?: string[]): Promise<Commentary[] | null> => {
   try {
     const res = await axios.get(`/api/commentaries`, {
-      params: { categoryId, authorId },
+      params: { categoryIds },
     });
 
     if (res.status !== 200 || !res.data) {

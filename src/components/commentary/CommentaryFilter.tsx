@@ -1,0 +1,39 @@
+import { Badge } from "@/components/ui/badge";
+
+export interface Filter {
+  id: string;
+  title: string;
+  isSelected: boolean;
+}
+
+interface CommentaryFilterProps {
+  filterList: Filter[];
+  onToggle: (id: string | null) => void;
+}
+
+export const CommentaryFilter = ({ filterList, onToggle }: CommentaryFilterProps) => {
+  return (
+    <div className="flex overflow-x-auto gap-2 pb-4">
+      <Badge
+        size="lg"
+        variant={filterList.every(f => !f.isSelected) ? "default" : "outline"}
+        className="cursor-pointer"
+        onClick={() => onToggle(null)}
+      >
+        All
+      </Badge>
+
+      {filterList.map(filter => (
+        <Badge
+          key={filter.id}
+          size="lg"
+          className="cursor-pointer"
+          variant={filter.isSelected ? "default" : "outline"}
+          onClick={() => onToggle(filter.id)}
+        >
+          {filter.title}
+        </Badge>
+      ))}
+    </div>
+  );
+};
