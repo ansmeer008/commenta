@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
-import { Timestamp } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 
 export async function GET(req: NextRequest) {
   try {
@@ -67,9 +67,25 @@ export async function POST(req: NextRequest) {
       updatedAt: now,
     };
 
-    const docRef = await adminDb.collection("commentaries").add(newCommentary);
+    await adminDb.runTransaction(async t => {
+      const categoryRef = adminDb.collection("categories").doc(categoryId);
 
-    return NextResponse.json({ id: docRef.id, ...newCommentary }, { status: 201 });
+      const categoryDoc = await t.get(categoryRef);
+      if (!categoryDoc.exists) {
+        throw new Error("Category not found");
+      }
+
+      // 코멘터리 등록
+      const commentaryRef = adminDb.collection("commentaries").doc();
+      t.set(commentaryRef, newCommentary);
+
+      // usageCount 증가
+      t.update(categoryRef, {
+        usageCount: FieldValue.increment(1),
+      });
+    });
+
+    return NextResponse.json({ data: newCommentary }, { status: 201 });
   } catch (error) {
     console.error("Error creating commentary:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

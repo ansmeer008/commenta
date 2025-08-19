@@ -8,7 +8,7 @@ export interface Filter {
 
 interface CommentaryFilterProps {
   filterList: Filter[];
-  onToggle: (id: string | null) => void;
+  onToggle: (id: string) => void;
 }
 
 export const CommentaryFilter = ({ filterList, onToggle }: CommentaryFilterProps) => {
@@ -16,9 +16,9 @@ export const CommentaryFilter = ({ filterList, onToggle }: CommentaryFilterProps
     <div className="flex overflow-x-auto gap-2 pb-4">
       <Badge
         size="lg"
-        variant={filterList.every(f => !f.isSelected) ? "default" : "outline"}
+        variant={filterList.every(f => f.isSelected) ? "default" : "outline"}
         className="cursor-pointer"
-        onClick={() => onToggle(null)}
+        onClick={() => onToggle("all")}
       >
         All
       </Badge>

@@ -3,12 +3,14 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 
+export type Subscribe = { id: string; episode: number | null };
+
 export interface UserData {
   uid: string;
   email: string;
   nickname: string;
   createdAt: Date;
-  subscribeCategory: string[];
+  subscribes: Subscribe[];
   isNoSpoilerMode: boolean;
 }
 interface AuthState {

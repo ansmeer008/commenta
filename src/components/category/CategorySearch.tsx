@@ -12,9 +12,11 @@ import { useForm } from "@/hooks/useForm";
 const SearchList = ({
   list,
   selectHandler,
+  selectBtnText,
 }: {
   list: Category[];
   selectHandler?: (select: Category) => void;
+  selectBtnText?: string;
 }) => {
   const { open, close } = useSimpleModal();
 
@@ -39,23 +41,23 @@ const SearchList = ({
                 언급 {item.usageCount}회, 구독 {item.subscribeCount}회
               </p>
             </div>
-            <div>
-              <Button
-                variant="ghost"
-                onClick={e => {
-                  e.stopPropagation();
-                  if (selectHandler) {
-                    selectHandler(item);
-                  }
-                }}
-                onMouseDown={e => e.preventDefault()}
-              >
-                <span className="text-xs text-gray-700">
-                  {selectHandler ? "선택하기" : "구독하기"}
-                </span>
-                <ListPlus size={20} />
-              </Button>
-            </div>
+            {selectHandler && (
+              <div>
+                <Button
+                  variant="ghost"
+                  onClick={e => {
+                    e.stopPropagation();
+                    if (selectHandler) {
+                      selectHandler(item);
+                    }
+                  }}
+                  onMouseDown={e => e.preventDefault()}
+                >
+                  <span className="text-xs text-gray-700">{selectBtnText ?? "구독하기"}</span>
+                  <ListPlus size={20} />
+                </Button>
+              </div>
+            )}
           </li>
         );
       })}
@@ -72,7 +74,7 @@ const SearchList = ({
 };
 
 const AddCategoryModalContent = ({ close }: { close: () => void }) => {
-  const { values, handleChange } = useForm({
+  const { values, setFieldValue } = useForm({
     title: "",
     author: "",
   });
@@ -93,8 +95,22 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
   return (
     <div className="p-4 flex flex-col gap-4">
       <h2 className="font-bold text-lg">작품 등록</h2>
-      <Input name="title" value={values.title} onChange={handleChange} placeholder="작품 제목" />
-      <Input name="author" value={values.author} onChange={handleChange} placeholder="작가명" />
+      <Input
+        name="title"
+        value={values.title}
+        onChange={e => {
+          setFieldValue("title", e.target.value);
+        }}
+        placeholder="작품 제목"
+      />
+      <Input
+        name="author"
+        value={values.author}
+        onChange={e => {
+          setFieldValue("author", e.target.value);
+        }}
+        placeholder="작가명"
+      />
       <div className="flex justify-end gap-2">
         <Button variant="secondary" onClick={close}>
           취소
@@ -108,9 +124,11 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
 export const CategorySearch = ({
   className,
   selectHandler,
+  selectBtnText,
 }: {
   className?: string;
   selectHandler?: (select: Category) => void;
+  selectBtnText?: string;
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -146,6 +164,7 @@ export const CategorySearch = ({
         {isOpen && (
           <SearchList
             list={categoryList}
+            selectBtnText={selectBtnText}
             selectHandler={category => {
               if (selectHandler) {
                 selectHandler(category);

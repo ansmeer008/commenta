@@ -1,15 +1,13 @@
 import { useState } from "react";
 
-type FormFields = Record<string, string>;
-
-export const useForm = <T extends FormFields>(initialValues: T) => {
+export const useForm = <T extends Record<string, any>>(initialValues: T) => {
   const [values, setValues] = useState<T>(initialValues);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+  // 값 직접 업데이트 (object나 number 등 input 이벤트 아닌 경우 사용)
+  const setFieldValue = <K extends keyof T>(field: K, value: T[K]) => {
     setValues(prev => ({
       ...prev,
-      [name]: value,
+      [field]: value,
     }));
   };
 
@@ -17,7 +15,7 @@ export const useForm = <T extends FormFields>(initialValues: T) => {
 
   return {
     values,
-    handleChange,
+    setFieldValue, // 새로 추가
     reset,
   };
 };

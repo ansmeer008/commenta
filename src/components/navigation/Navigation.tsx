@@ -5,10 +5,23 @@ import { NavigationMenu, NavigationMenuLink } from "@/components/ui/navigation-m
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
 import { CategorySearch } from "../category/CategorySearch";
+import { useSimpleModal } from "@/hooks/useSimpleModal";
+import { SubscribeModalContent } from "../subscribe/SubscribeModalContent";
+import { Category } from "@/apis/category";
 
 export const Navigation = () => {
   const pathname = usePathname();
   const { isLoggedIn } = useAuthStore();
+  const { open, close } = useSimpleModal();
+
+  const handleSubscribe = (category: Category) => {
+    open({
+      type: "confirm",
+      message: null,
+      customContent: <SubscribeModalContent close={close} category={category} />,
+      buttonList: [],
+    });
+  };
 
   const navMenuList = [
     {
@@ -34,7 +47,9 @@ export const Navigation = () => {
 
   return (
     <>
-      {isLoggedIn && <CategorySearch className={"w-full px-8 py-2"} />}
+      {isLoggedIn && (
+        <CategorySearch className={"w-full px-8 py-2"} selectHandler={handleSubscribe} />
+      )}
       <NavigationMenu className="flex w-full bg-white">
         <ul className="flex justify-between w-full border-b-2 border-b-gray-100">
           {navMenuList.map(menu => {

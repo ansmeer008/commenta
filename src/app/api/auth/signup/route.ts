@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       email,
       nickname,
       createdAt: new Date().toISOString(),
-      subscribeCategory: [],
+      subscribes: [],
       isNoSpoilerMode: false,
     });
 

@@ -42,10 +42,9 @@ export default function Commentaries() {
     }
   };
 
-  const handleToggleFilter = (id: string | null) => {
-    if (id === null) {
-      // All 클릭 → 전체 선택 해제
-      setFilterList(prev => prev.map(f => ({ ...f, isSelected: false })));
+  const handleToggleFilter = (id: string) => {
+    if (id === "all") {
+      setFilterList(prev => prev.map(f => ({ ...f, isSelected: true })));
     } else {
       setFilterList(prev => prev.map(f => (f.id === id ? { ...f, isSelected: !f.isSelected } : f)));
     }
