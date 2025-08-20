@@ -49,8 +49,10 @@ export function SimpleModalRenderer() {
                 <Button
                   className="flex-1"
                   key={button.text}
-                  onClick={() => {
+                  onClick={e => {
+                    e.stopPropagation();
                     button.onClick(close);
+                    console.log("here btn close");
                   }}
                 >
                   {button.text}

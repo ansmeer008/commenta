@@ -4,23 +4,30 @@ import { Textarea } from "../ui/textarea";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CategorySearch } from "../category/CategorySearch";
 import { Badge } from "../ui/badge";
-import { createCommentary } from "@/apis/commentaries";
+import { Commentary, createCommentary } from "@/apis/commentary";
 import { Category } from "@/apis/category";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
 import { NumberInput } from "../ui/numberInput";
+import { getCommentary } from "@/apis/commentary";
 
 interface CommentaryFormState {
   content: string;
-  category: Category | null;
+  category: Pick<Category, "title" | "id"> | null;
   isSpoiler: boolean;
   episode: number | null;
 }
 
-export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
+export const WriteCommentaryForm = ({
+  close,
+  commentaryId,
+}: {
+  close: () => void;
+  commentaryId?: string;
+}) => {
   const { user } = useAuthStore();
   const [errorCaption, setErrorCaption] = useState<string | null>(null);
   const { values, setFieldValue, reset } = useForm<CommentaryFormState>({
@@ -47,8 +54,6 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
       setErrorCaption(null);
     }
 
-    console.log(values);
-
     if (user) {
       const res = await createCommentary({
         authorId: user.uid,
@@ -69,6 +74,28 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
     }
   };
 
+  useEffect(() => {
+    if (!commentaryId) return;
+
+    const initCommentaryData = async (id: string) => {
+      const commentaryData = await getCommentary(id);
+      console.log({ commentaryData });
+      if (commentaryData) {
+        setFieldValue("content", commentaryData.content);
+        setFieldValue("category", {
+          id: commentaryData.categoryId,
+          title: commentaryData.categoryTitle,
+        });
+        setFieldValue("isSpoiler", commentaryData.isSpoiler ?? false);
+        setFieldValue("episode", commentaryData.episode ?? 0);
+      }
+    };
+
+    initCommentaryData(commentaryId);
+  }, [commentaryId]);
+
+  console.log(values);
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-0.5">
@@ -76,7 +103,7 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
         <div className="flex flex-wrap gap-2">
           {values.category ? (
             <Badge>
-              {values.category.title}({values.category.author})
+              {values.category.title}
               <button
                 onClick={() => {
                   setFieldValue("category", null);
@@ -110,7 +137,7 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
           name="content"
           value={values.content}
         />
-        <span className="text-left text-xs text-gray-400">{values.content.length}/100</span>
+        <span className="text-left text-xs text-gray-400">{values.content?.length || 0}/100</span>
       </div>
       <div className="flex flex-col gap-0.5">
         <p className="text-xs font-bold">작품 회차 등록</p>

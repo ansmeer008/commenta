@@ -8,7 +8,6 @@ export function useRouteModal() {
   const { isOpen, modalId, open, close } = useRouteModalStore();
 
   const openRouteModal = (path: string) => {
-    console.log(path);
     open(path);
     router.push(path);
   };

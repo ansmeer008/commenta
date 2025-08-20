@@ -11,7 +11,7 @@ import { useRouteModal } from "@/hooks/useRouteModal";
 
 export default function LoginForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
-  const { values, handleChange } = useForm({
+  const { values, setFieldValue } = useForm({
     email: "",
     password: "",
   });
@@ -50,7 +50,7 @@ export default function LoginForm({ close }: { close?: () => void }) {
           type="email"
           name="email"
           value={values.email}
-          onChange={handleChange}
+          onChange={e => setFieldValue("email", e.target.value)}
           placeholder="example@email.com"
         />
         <Label htmlFor="password">Password</Label>
@@ -59,7 +59,7 @@ export default function LoginForm({ close }: { close?: () => void }) {
           name="password"
           type="password"
           value={values.password}
-          onChange={handleChange}
+          onChange={e => setFieldValue("password", e.target.value)}
           placeholder="비밀번호를 입력해주세요"
         />
 

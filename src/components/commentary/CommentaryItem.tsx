@@ -1,13 +1,18 @@
 "use client";
-import { useState } from "react";
 import { CommentaryImage } from "./CommentaryImage";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { useRouter } from "next/navigation";
 import { EllipsisVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouteModal } from "@/hooks/useRouteModal";
-import { Commentary } from "@/apis/commentaries";
+import { Commentary } from "@/apis/commentary";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { useSimpleModal } from "@/hooks/useSimpleModal";
 
 export const CommentaryItem = ({
   id,
@@ -21,11 +26,40 @@ export const CommentaryItem = ({
   isAuthor,
 }: Commentary & { className: string; isAuthor: boolean }) => {
   const { openRouteModal } = useRouteModal();
+  const { open } = useSimpleModal();
 
   const preview = content.length > 30 ? `${content.slice(0, 30)}...` : content;
 
   const openDetailCommentaryModal = () => {
     openRouteModal(`/commentary/${id}`);
+  };
+
+  const openEditCommentaryModal = () => {
+    openRouteModal(`/commentary/${id}/edit`);
+  };
+
+  const openDeleteCommentaryModal = () => {
+    open({
+      type: "confirm",
+      message: "작성하신 코멘터리가 삭제됩니다",
+      customContent: null,
+      buttonList: [
+        {
+          text: "취소",
+          onClick: close => {
+            console.log("취소 close");
+            close();
+          },
+        },
+        {
+          text: "삭제",
+          onClick: close => {
+            console.log("삭제 close");
+            close();
+          },
+        },
+      ],
+    });
   };
 
   return (
@@ -42,9 +76,36 @@ export const CommentaryItem = ({
               <span className="text-xs text-gray-500">3분전</span>
             </div>
             {isAuthor && (
-              <Button variant="ghost">
-                <EllipsisVertical size={16} />
-              </Button>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    onClick={e => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <EllipsisVertical size={16} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuItem
+                    onClick={e => {
+                      e.stopPropagation();
+                      openEditCommentaryModal();
+                    }}
+                  >
+                    수정하기
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={e => {
+                      e.stopPropagation();
+                      openDeleteCommentaryModal();
+                    }}
+                  >
+                    삭제하기
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
           <div>
