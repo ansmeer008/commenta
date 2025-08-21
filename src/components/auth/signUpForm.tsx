@@ -15,7 +15,7 @@ import { useAuthStore } from "@/store/authStore";
 
 export default function SignUpForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
-  const { values, handleChange } = useForm({
+  const { values, setFieldValue } = useForm({
     email: "",
     password: "",
     nickname: "",
@@ -74,7 +74,7 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           name="email"
           type="email"
           value={values.email}
-          onChange={handleChange}
+          onChange={e => setFieldValue("email", e.target.value)}
           placeholder="example@email.com"
         />
         <Label htmlFor="password">Password</Label>
@@ -83,7 +83,7 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           name="password"
           type="password"
           value={values.password}
-          onChange={handleChange}
+          onChange={e => setFieldValue("password", e.target.value)}
           placeholder="비밀번호를 입력하세요"
         />
         <Label htmlFor="nickname">Nickname</Label>
@@ -92,7 +92,7 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           name="nickname"
           type="nickname"
           value={values.nickname}
-          onChange={handleChange}
+          onChange={e => setFieldValue("nickname", e.target.value)}
           placeholder="닉네임을 입력하세요"
         />
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}

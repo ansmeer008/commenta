@@ -1,29 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminDb } from "@/lib/admin";
+import { fetchCommentaryList } from "@/lib/commentaries";
 
 export async function GET(req: NextRequest) {
   try {
-    const searchParams = req.nextUrl.searchParams;
-
-    const categoryIds = searchParams.getAll("categoryIds[]");
-
-    let query: FirebaseFirestore.Query = adminDb.collection("commentaries");
-
-    // 조건별 쿼리 조합
-    if (categoryIds.length > 0) {
-      query = query.where("categoryId", "in", categoryIds.slice(0, 10)); // 최대 10개
-    }
-
-    const snapshot = await query.orderBy("createdAt", "desc").get();
-
-    if (snapshot.empty) {
-      return NextResponse.json({ data: [] }, { status: 200 });
-    }
-
-    const commentaryList = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const categoryIds = req.nextUrl.searchParams.getAll("categoryIds[]");
+    const commentaryList = await fetchCommentaryList(categoryIds);
 
     return NextResponse.json({ data: commentaryList }, { status: 200 });
   } catch (error) {

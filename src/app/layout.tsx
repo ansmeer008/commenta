@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import { SimpleModalRenderer } from "@/components/ui/simpleModalRenderer";
 import React from "react";
 import { Navigation } from "@/components/navigation/Navigation";
-import AuthLayout from "../components/auth/authLayout";
+import AuthLayout from "../components/auth/AuthLayout";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 

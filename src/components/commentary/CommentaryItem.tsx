@@ -21,6 +21,7 @@ export const CommentaryItem = ({
   authorId,
   authorNickName,
   categoryTitle,
+
   className,
   isSpoiler,
   isAuthor,
@@ -28,7 +29,7 @@ export const CommentaryItem = ({
   const { openRouteModal } = useRouteModal();
   const { open } = useSimpleModal();
 
-  const preview = content.length > 30 ? `${content.slice(0, 30)}...` : content;
+  const preview = content.length > 100 ? `${content.slice(0, 100)}...` : content;
 
   const openDetailCommentaryModal = () => {
     openRouteModal(`/commentary/${id}`);
