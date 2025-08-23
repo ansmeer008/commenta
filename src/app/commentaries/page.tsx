@@ -1,6 +1,7 @@
 "use client";
 
-import { Commentary, getCommentaryList } from "@/apis/commentaries";
+import { getCommentaryList } from "@/apis/commentaries";
+import { Commentary } from "@/apis/commentary";
 import { getSubscribeCategoryList } from "@/apis/subscribe";
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { CommentaryFilter, Filter } from "@/components/commentary/CommentaryFilter";
@@ -8,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Commentaries() {
   const [filterList, setFilterList] = useState<Filter[]>([]);
-  const [commentaryList, setCommentaryList] = useState<Commentary[]>([]);
   const { openRouteModal } = useRouteModal();
   const { user } = useAuthStore();
 
@@ -19,28 +20,11 @@ export default function Commentaries() {
     openRouteModal("/commentary/create");
   };
 
-  const initFilter = async () => {
-    if (user?.uid) {
-      const subscribeList = (await getSubscribeCategoryList(user.uid)) || [];
-      const filters = subscribeList.map(item => {
-        return {
-          isSelected: false,
-          title: item.title,
-          id: item.id,
-        };
-      });
-
-      setFilterList(filters);
-    }
-  };
-
-  const initCommentaryList = async () => {
-    const filterIds = filterList.filter(item => item.isSelected).map(filter => filter.id);
-    const list = await getCommentaryList(filterIds);
-    if (list) {
-      setCommentaryList(list);
-    }
-  };
+  const { data: subscribeList = [] } = useQuery({
+    queryKey: ["subscribeList", user?.uid],
+    queryFn: () => getSubscribeCategoryList(user!.uid),
+    enabled: !!user?.uid,
+  });
 
   const handleToggleFilter = (id: string) => {
     if (id === "all") {
@@ -49,14 +33,28 @@ export default function Commentaries() {
       setFilterList(prev => prev.map(f => (f.id === id ? { ...f, isSelected: !f.isSelected } : f)));
     }
   };
-
   useEffect(() => {
-    initFilter();
-  }, [user?.uid]);
+    if (subscribeList && subscribeList.length > 0) {
+      const filters = subscribeList.map(item => ({
+        isSelected: false,
+        title: item.title,
+        id: item.id,
+      }));
+      setFilterList(filters);
+    }
+  }, [subscribeList]);
 
-  useEffect(() => {
-    initCommentaryList();
-  }, [filterList]);
+  const filterIds = filterList.filter(item => item.isSelected).map(filter => filter.id);
+  const {
+    data: commentaryList = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery<Commentary[] | null>({
+    queryKey: ["commentaryList", filterIds], // 필터 값이 바뀌면 자동으로 refetch
+    queryFn: () => getCommentaryList(filterIds),
+    enabled: filterList.length > 0, // 필터 초기화가 끝난 후 실행
+  });
 
   return (
     <div className="min-h-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -68,7 +66,7 @@ export default function Commentaries() {
       <main>
         <div>
           <CommentaryFilter filterList={filterList} onToggle={handleToggleFilter} />
-          <CommentaryList commentaryList={commentaryList} />
+          <CommentaryList commentaryList={commentaryList || []} />
         </div>
       </main>
     </div>

@@ -8,6 +8,7 @@ import { useSimpleModal } from "@/hooks/useSimpleModal";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useForm } from "@/hooks/useForm";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const SearchList = ({
   list,
@@ -79,17 +80,29 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
     author: "",
   });
 
-  // TODO:: check if duplicated tag
-  const handleSave = async () => {
-    const { title, author } = values;
-    if (title.length && author.length) {
-      const newCategory = await addCategory({ title, author });
-
+  const { mutate: mutateCategory, isPending } = useMutation({
+    mutationFn: async () => {
+      const { title, author } = values;
+      return await addCategory({ title, author });
+    },
+    onSuccess: newCategory => {
       if (newCategory) {
-        toast(`${title}(${author}) 작품이 등록되었습니다!`);
+        toast(`${values.title}(${values.author}) 작품이 등록되었습니다!`);
         close();
       }
+    },
+    onError: () => {
+      toast("작품 등록에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const handleSave = () => {
+    const { title, author } = values;
+    if (!title.length || !author.length) {
+      toast("제목과 작가명을 입력해주세요.");
+      return;
     }
+    mutateCategory();
   };
 
   return (
@@ -134,7 +147,7 @@ export const CategorySearch = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [triggerSearch, setTriggerSearch] = useState("");
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -147,6 +160,12 @@ export const CategorySearch = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const { data: categoryList = [], isFetching } = useQuery({
+    queryKey: ["categorySearch", triggerSearch],
+    queryFn: () => searchCategoryList(triggerSearch),
+    enabled: !!triggerSearch,
+  });
 
   return (
     <div className={cn("flex gap-2", className)} ref={wrapperRef}>
@@ -163,7 +182,7 @@ export const CategorySearch = ({
         </div>
         {isOpen && (
           <SearchList
-            list={categoryList}
+            list={categoryList || []}
             selectBtnText={selectBtnText}
             selectHandler={category => {
               if (selectHandler) {
@@ -176,12 +195,10 @@ export const CategorySearch = ({
       </div>
       <Button
         className="flex-1/5 md:flex-1/8"
+        disabled={isFetching}
         onClick={async () => {
           if (search.trim().length) {
-            const list = await searchCategoryList(search);
-            setCategoryList(list);
-          } else {
-            setCategoryList([]);
+            setTriggerSearch(search.trim());
           }
         }}
       >

@@ -82,7 +82,7 @@ export default function MyPage() {
         </div>
         <div className="flex flex-col gap-2 rounded-lg p-4">
           <p className="text-lg font-bold">내가 쓴 코멘터리</p>
-          <CommentaryList commentaryList={mockList} isAuthor={true} />
+          <CommentaryList commentaryList={[]} />
         </div>
         {/* TODO:: 태그 관리하기, 내가 쓴 글 확인 , 로그아웃 등 기능 위치하는 곳 */}
         {/* 구독하는 작품의 화 수 입력하기 */}

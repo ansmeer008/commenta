@@ -1,4 +1,3 @@
-import { SubscribeModalContent } from "./../components/subscribe/SubscribeModalContent";
 import axios from "axios";
 import { Category } from "./category";
 

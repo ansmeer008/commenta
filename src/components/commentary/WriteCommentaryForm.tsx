@@ -7,12 +7,14 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { CategorySearch } from "../category/CategorySearch";
 import { Badge } from "../ui/badge";
-import { Commentary, createCommentary } from "@/apis/commentary";
+import { Commentary, createCommentary, editCommentary } from "@/apis/commentary";
 import { Category } from "@/apis/category";
 import { useAuthStore } from "@/store/authStore";
 import { toast } from "sonner";
 import { NumberInput } from "../ui/numberInput";
 import { getCommentary } from "@/apis/commentary";
+import { useParams } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface CommentaryFormState {
   content: string;
@@ -21,20 +23,38 @@ interface CommentaryFormState {
   episode: number | null;
 }
 
-export const WriteCommentaryForm = ({
-  close,
-  commentaryId,
-}: {
-  close: () => void;
-  commentaryId?: string;
-}) => {
+export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
+  const params = useParams();
+  const commentaryId = params?.id as string;
+
   const { user } = useAuthStore();
   const [errorCaption, setErrorCaption] = useState<string | null>(null);
-  const { values, setFieldValue, reset } = useForm<CommentaryFormState>({
+  const { values, setFieldValue } = useForm<CommentaryFormState>({
     content: "",
     category: null,
     isSpoiler: false,
     episode: null,
+  });
+
+  const queryClient = useQueryClient();
+  const { mutateAsync: mutateCommentary, isPending } = useMutation({
+    mutationFn: async (payload: Omit<Commentary, "id" | "createdAt" | "updatedAt">) => {
+      if (commentaryId) {
+        // 수정
+        return await editCommentary({ id: commentaryId, ...payload });
+      } else {
+        // 등록
+        return await createCommentary(payload);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["commentaryList"] });
+      toast(commentaryId ? "코멘터리가 수정되었습니다!" : "코멘터리가 등록되었습니다!");
+      close();
+    },
+    onError: () => {
+      toast(commentaryId ? "코멘터리 수정에 실패했습니다." : "코멘터리 등록에 실패했습니다.");
+    },
   });
 
   const checkValidationMsg = (values: CommentaryFormState) => {
@@ -54,24 +74,20 @@ export const WriteCommentaryForm = ({
       setErrorCaption(null);
     }
 
-    if (user) {
-      const res = await createCommentary({
-        authorId: user.uid,
-        authorNickName: user.nickname,
-        categoryId: values.category!.id,
-        content: values.content,
-        categoryTitle: values.category!.title,
-        episode: values.episode!,
-        isSpoiler: values.isSpoiler,
-      });
-
-      if (res) {
-        toast("코멘터리가 등록되었습니다!");
-        close();
-      }
-    } else {
+    if (!user) {
       toast("유저 정보가 존재하지 않습니다.");
+      return;
     }
+
+    await mutateCommentary({
+      authorId: user.uid,
+      authorNickName: user.nickname,
+      categoryId: values.category!.id,
+      categoryTitle: values.category!.title,
+      content: values.content,
+      episode: values.episode!,
+      isSpoiler: values.isSpoiler,
+    });
   };
 
   useEffect(() => {
@@ -79,7 +95,6 @@ export const WriteCommentaryForm = ({
 
     const initCommentaryData = async (id: string) => {
       const commentaryData = await getCommentary(id);
-      console.log({ commentaryData });
       if (commentaryData) {
         setFieldValue("content", commentaryData.content);
         setFieldValue("category", {
@@ -93,8 +108,6 @@ export const WriteCommentaryForm = ({
 
     initCommentaryData(commentaryId);
   }, [commentaryId]);
-
-  console.log(values);
 
   return (
     <div className="flex flex-col gap-5">
@@ -164,7 +177,7 @@ export const WriteCommentaryForm = ({
         <span className="text-xs">스포일러 안내 문구를 표시할 수 있습니다</span>
       </div>
       {errorCaption && <p className="text-xs font-bold text-red-500 my-2">{errorCaption}</p>}
-      <Button size="lg" onClick={handleSubmit}>
+      <Button size="lg" onClick={handleSubmit} disabled={isPending}>
         코멘터리 등록하기
       </Button>
     </div>

@@ -1,12 +1,11 @@
 import { useForm } from "@/hooks/useForm";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 import { Category } from "@/apis/category";
 import { NumberInput } from "../ui/numberInput";
 import { useAuthStore } from "@/store/authStore";
 import { addSubscription } from "@/apis/subscribe";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface SubscribeFormState {
   id: string;
@@ -21,24 +20,29 @@ export const SubscribeModalContent = ({
   category: Category;
 }) => {
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const { values, setFieldValue, reset } = useForm<SubscribeFormState>({
     id: category.id,
     episode: null,
   });
-
-  const handleSubmit = async () => {
-    if (!user) return;
-    const result = await addSubscription(user.uid, {
-      id: values.id,
-      episode: values.episode,
-    });
-
-    if (result) {
+  const { mutate: mutateSubscribe, isPending } = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("로그인 정보가 없습니다.");
+      return addSubscription(user.uid, {
+        id: values.id,
+        episode: values.episode,
+      });
+    },
+    onSuccess: () => {
       toast(`${category.title}(${category.author}) 구독이 완료되었습니다`);
+      queryClient.invalidateQueries({ queryKey: ["subscribeList", user?.uid] });
       reset();
       close();
-    }
-  };
+    },
+    onError: (error: any) => {
+      toast(error.message || "구독 등록 실패");
+    },
+  });
 
   return (
     <div className="p-4 flex flex-col">
@@ -77,7 +81,7 @@ export const SubscribeModalContent = ({
         <Button className="flex-1/2" variant="secondary" onClick={close}>
           취소
         </Button>
-        <Button className="flex-1/2" onClick={handleSubmit}>
+        <Button className="flex-1/2" onClick={() => mutateSubscribe()} disabled={isPending}>
           등록
         </Button>
       </div>
