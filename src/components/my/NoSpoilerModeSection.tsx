@@ -1,8 +1,33 @@
 import { useState } from "react";
 import { Switch } from "../ui/switch";
+import { useAuthStore } from "@/store/authStore";
+import { updateUserData } from "@/apis/userData";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
 export const NoSpoilerModeSection = () => {
-  const [isNoSpoilerMode, setIsNoSpoilerMode] = useState(true);
+  const { user } = useAuthStore();
+  const [isNoSpoilerMode, setIsNoSpoilerMode] = useState(user?.isNoSpoilerMode ?? false);
+
+  const { mutate: updateMode, isPending } = useMutation({
+    mutationFn: async (mode: boolean) => {
+      if (!user) throw new Error("로그인 정보가 없습니다.");
+      return updateUserData(user.uid, { isNoSpoilerMode: mode });
+    },
+    onSuccess: () => {
+      toast(`스포일러 방지 모드가 ${isNoSpoilerMode ? "켜졌어요" : "꺼졌어요"}`);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "모드 변경 실패");
+      setIsNoSpoilerMode(prev => !prev);
+    },
+  });
+
+  const handleToggle = (checked: boolean) => {
+    setIsNoSpoilerMode(checked);
+    updateMode(checked);
+  };
+
   return (
     <div className="flex flex-col border-1 rounded-lg p-4 flex-1">
       <div className="flex justify-between items-center">
@@ -15,10 +40,10 @@ export const NoSpoilerModeSection = () => {
           )}
         </div>
         <Switch
+          className="cursor-pointer"
           checked={isNoSpoilerMode}
-          onCheckedChange={checked => {
-            setIsNoSpoilerMode(checked);
-          }}
+          onCheckedChange={handleToggle}
+          disabled={isPending}
         />
       </div>
       <p className="text-xs text-gray-300">지정한 회차 이상의 코멘터리는 노출되지 않습니다</p>

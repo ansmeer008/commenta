@@ -1,10 +1,13 @@
 import axios from "axios";
 import { Commentary } from "./commentary";
 
-export const getCommentaryList = async (categoryIds?: string[]): Promise<Commentary[] | null> => {
+export const getCommentaryList = async (
+  categoryIds?: string[],
+  authorId?: string
+): Promise<Commentary[] | null> => {
   try {
     const res = await axios.get(`/api/commentaries`, {
-      params: { categoryIds },
+      params: { categoryIds, authorId },
     });
 
     if (res.status !== 200 || !res.data) {

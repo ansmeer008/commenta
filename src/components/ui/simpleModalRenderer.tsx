@@ -11,7 +11,10 @@ import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function SimpleModalRenderer() {
+  //TODO:: title 안 나옴
+  //TODO:: button variations 지정 가능하게 하기
   const {
+    title,
     type,
     message,
     closeModal,
@@ -34,12 +37,16 @@ export function SimpleModalRenderer() {
         }}
       >
         <DialogHeader>
-          <VisuallyHidden>
-            <DialogTitle>알림</DialogTitle>
-          </VisuallyHidden>
+          {title ? (
+            <DialogTitle>{title}</DialogTitle>
+          ) : (
+            <VisuallyHidden>
+              <DialogTitle></DialogTitle>
+            </VisuallyHidden>
+          )}
         </DialogHeader>
 
-        {message && <p className="text-sm">{message}</p>}
+        {message && <p className="text-sm text-center">{message}</p>}
         {customContent}
 
         <DialogFooter>
@@ -49,6 +56,7 @@ export function SimpleModalRenderer() {
                 <Button
                   className="flex-1"
                   key={button.text}
+                  variant={button.variation}
                   onClick={e => {
                     e.stopPropagation();
                     button.onClick(close);

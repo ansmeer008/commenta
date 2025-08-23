@@ -4,7 +4,8 @@ import { fetchCommentaryList } from "@/lib/commentaries";
 export async function GET(req: NextRequest) {
   try {
     const categoryIds = req.nextUrl.searchParams.getAll("categoryIds[]");
-    const commentaryList = await fetchCommentaryList(categoryIds);
+    const authorId = req.nextUrl.searchParams.get("authorId");
+    const commentaryList = await fetchCommentaryList(authorId, categoryIds);
 
     return NextResponse.json({ data: commentaryList }, { status: 200 });
   } catch (error) {

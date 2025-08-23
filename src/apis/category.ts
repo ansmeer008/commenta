@@ -1,5 +1,3 @@
-import { collection, getDocs, query, where, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import axios from "axios";
 
 export interface Category {

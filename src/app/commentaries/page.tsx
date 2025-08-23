@@ -2,7 +2,7 @@
 
 import { getCommentaryList } from "@/apis/commentaries";
 import { Commentary } from "@/apis/commentary";
-import { getSubscribeCategoryList } from "@/apis/subscribe";
+import { SubscribeCategory, getSubscribeCategoryList } from "@/apis/subscribe";
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { CommentaryFilter, Filter } from "@/components/commentary/CommentaryFilter";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ export default function Commentaries() {
     openRouteModal("/commentary/create");
   };
 
-  const { data: subscribeList = [] } = useQuery({
+  const { data: subscribeList = [] } = useQuery<SubscribeCategory[]>({
     queryKey: ["subscribeList", user?.uid],
     queryFn: () => getSubscribeCategoryList(user!.uid),
     enabled: !!user?.uid,
@@ -37,8 +37,8 @@ export default function Commentaries() {
     if (subscribeList && subscribeList.length > 0) {
       const filters = subscribeList.map(item => ({
         isSelected: false,
-        title: item.title,
-        id: item.id,
+        title: item.detail.title,
+        id: item.detail.id,
       }));
       setFilterList(filters);
     }

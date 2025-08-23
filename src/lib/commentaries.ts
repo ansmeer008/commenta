@@ -1,11 +1,18 @@
 import { adminDb } from "@/lib/admin";
 import { Commentary } from "@/apis/commentary";
 
-export async function fetchCommentaryList(categoryIds?: string[]): Promise<Commentary[]> {
+export async function fetchCommentaryList(
+  authorId: string | null,
+  categoryIds?: string[]
+): Promise<Commentary[]> {
   let query: FirebaseFirestore.Query = adminDb.collection("commentaries");
 
   if (categoryIds?.length) {
     query = query.where("categoryId", "in", categoryIds.slice(0, 10));
+  }
+
+  if (authorId) {
+    query = query.where("authorId", "==", authorId);
   }
 
   const snapshot = await query.orderBy("createdAt", "desc").get();

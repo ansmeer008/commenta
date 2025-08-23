@@ -1,18 +1,32 @@
-import { EllipsisVertical, Flame, Plus } from "lucide-react";
+import { Flame } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
+import { SubscribeCategory, getSubscribeCategoryList } from "@/apis/subscribe";
+import { useAuthStore } from "@/store/authStore";
+import { useQuery } from "@tanstack/react-query";
+import { SubscribeModalContent } from "../subscribe/SubscribeModalContent";
 
-//TODO:: props category data interface 교체 (최대 10개까지 구독 가능하도록 해야함)
-export const SubscibeSection = ({ subscribeList }: { subscribeList: any[] }) => {
-  const { open } = useSimpleModal();
+export const SubscibeSection = () => {
+  const { open, close } = useSimpleModal();
+  const { user } = useAuthStore();
 
-  //just test
-  //TODO:: 회차 정보 처음에는 input으로 받고 추후에 업데이트 시킬 땐 + - 버튼으로 쉽게 올리거나 내릴 수 있게 하기
-  const openCategoryInfo = () => {
+  const { data: subscribeList = [], isLoading } = useQuery<SubscribeCategory[]>({
+    queryKey: ["subscribeList", user?.uid],
+    queryFn: () => (user?.uid ? getSubscribeCategoryList(user.uid) : Promise.resolve([])),
+    enabled: !!user?.uid, // 로그인 한 경우에만 실행
+  });
+
+  const openCategoryInfo = (subscribeData: SubscribeCategory) => {
     open({
       type: "confirm",
-      customContent: <>작품 정보랑 회차 정보 드러감</>,
+      customContent: (
+        <SubscribeModalContent
+          close={close}
+          category={subscribeData.detail}
+          subscribeData={subscribeData}
+        />
+      ),
       message: null,
       buttonList: [],
     });
@@ -22,28 +36,30 @@ export const SubscibeSection = ({ subscribeList }: { subscribeList: any[] }) => 
     <div className="flex flex-col gap-2 border-1 rounded-lg p-4 flex-1">
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
-          <span className="text-base font-bold">나의 구독</span>
-          <Button type="button" variant="ghost">
-            <EllipsisVertical size={20} />
-          </Button>
+          <div className="flex items-center gap-1 text-base font-bold">
+            나의 구독
+            <span className="text-xs font-medium text-gray-500">({subscribeList.length}/10)</span>
+          </div>
         </div>
-        <p className="text-xs text-gray-500">언급이 많은 작품에는 활활 타오르는 표시가 붙어요</p>
+        <p className="text-xs text-gray-500">
+          현재 구독하고 있는 작품들의 코멘터리를 보여줍니다 (최대 10개)
+        </p>
       </div>
-      {/* TODO:: 알록달록..? */}
       <div className="flex flex-wrap gap-2">
-        <Badge size="lg" onClick={openCategoryInfo}>
-          <Flame size={14} color="red" fill="red" />
-          데못죽(백덕수)
-        </Badge>
-        <Badge size="lg">
-          <Flame size={14} color="red" fill="red" />
-          괴담출근(백덕수)
-        </Badge>
-        <Badge size="lg">어두운바다의등불이되어(연산호)</Badge>
-        <Badge size="lg">
-          <Plus size={10} />
-          10
-        </Badge>
+        {subscribeList.map(subscribe => {
+          const isHot = subscribe.detail.usageCount > 10 || subscribe.detail.subscribeCount > 10;
+          return (
+            <Badge
+              key={subscribe.detail.id}
+              size="lg"
+              onClick={() => openCategoryInfo(subscribe)}
+              className="cursor-pointer"
+            >
+              {isHot && <Flame size={14} color="red" fill="red" />}
+              {subscribe.detail.title} ({subscribe.detail.author})
+            </Badge>
+          );
+        })}
       </div>
     </div>
   );
