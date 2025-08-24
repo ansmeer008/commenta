@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export function SimpleModalRenderer() {
-  //TODO:: title 안 나옴
-  //TODO:: button variations 지정 가능하게 하기
   const {
     title,
     type,
@@ -36,38 +34,34 @@ export function SimpleModalRenderer() {
           }
         }}
       >
-        <DialogHeader>
-          {title ? (
-            <DialogTitle>{title}</DialogTitle>
-          ) : (
-            <VisuallyHidden>
-              <DialogTitle></DialogTitle>
-            </VisuallyHidden>
-          )}
-        </DialogHeader>
+        {title ? (
+          <DialogTitle>{title}</DialogTitle>
+        ) : (
+          <VisuallyHidden>
+            <DialogTitle>Modal</DialogTitle>
+          </VisuallyHidden>
+        )}
 
         {message && <p className="text-sm text-center">{message}</p>}
         {customContent}
 
-        <DialogFooter>
-          {buttonList?.length > 0 &&
-            buttonList.map(button => {
-              return (
-                <Button
-                  className="flex-1"
-                  key={button.text}
-                  variant={button.variation}
-                  onClick={e => {
-                    e.stopPropagation();
-                    button.onClick(close);
-                    console.log("here btn close");
-                  }}
-                >
-                  {button.text}
-                </Button>
-              );
-            })}
-        </DialogFooter>
+        {buttonList?.length > 0 && (
+          <DialogFooter className="gap-2">
+            {buttonList.map(button => (
+              <Button
+                className="flex-1"
+                key={button.text}
+                variant={button.variation}
+                onClick={e => {
+                  e.stopPropagation();
+                  button.onClick(close);
+                }}
+              >
+                {button.text}
+              </Button>
+            ))}
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

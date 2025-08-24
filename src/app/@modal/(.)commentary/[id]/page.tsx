@@ -23,7 +23,7 @@ export default function CommentaryDetailModal(props: { params: Promise<{ id: str
             <DialogTitle></DialogTitle>
           </DialogHeader>
         </VisuallyHidden>
-        <CommentaryDetail id={id} isModal={true} />
+        <CommentaryDetail id={id} isModal={true} close={closeWithRouterBack} />
       </DialogContent>
     </Dialog>
   );

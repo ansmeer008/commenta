@@ -12,6 +12,8 @@ import {
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
+import { useLoadingStore } from "@/store/loadingStore";
+import { XIcon } from "lucide-react";
 
 interface SubscribeFormState {
   id: string;
@@ -30,6 +32,7 @@ export const SubscribeModalContent = ({
   const { user } = useAuthStore();
   const { open } = useSimpleModal();
   const queryClient = useQueryClient();
+  const { startLoading, stopLoading } = useLoadingStore();
   const { values, setFieldValue, reset } = useForm<SubscribeFormState>({
     id: category.id,
     episode: subscribeData?.episode ?? null,
@@ -49,6 +52,8 @@ export const SubscribeModalContent = ({
         });
       }
     },
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
     onSuccess: () => {
       toast(
         subscribeData
@@ -72,6 +77,8 @@ export const SubscribeModalContent = ({
       if (!subscribeData) throw new Error("삭제할 구독 정보가 없습니다.");
       return deleteSubscription(user.uid, subscribeData.id);
     },
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
     onSuccess: () => {
       toast(`${category.title} 구독이 삭제되었습니다`);
       queryClient.invalidateQueries({ queryKey: ["subscribeList", user?.uid] });
@@ -106,13 +113,16 @@ export const SubscribeModalContent = ({
   };
 
   return (
-    <div className="p-4 flex flex-col">
+    <div className="relative flex flex-col">
       <div className="mb-4">
-        <h2 className="font-bold text-lg">작품 코멘터리 구독하기</h2>
+        <h2 className="font-bold text-lg">작품 코멘터리 구독</h2>
         <p className="text-xs text-gray-500">
           같은 작품을 읽고 있는 독자들의 코멘터리를 구독합니다.
         </p>
       </div>
+      <Button className="absolute right-0" variant="ghost" onClick={close}>
+        <XIcon />
+      </Button>
       <div className="border-1 rounded-md p-4 flex flex-col gap-1 mb-6">
         <li className="flex justify-between items-center">
           <span className="text-sm font-bold">작품명</span>
@@ -136,6 +146,7 @@ export const SubscribeModalContent = ({
           min={0}
           max={99999}
           step={1}
+          placeholder="지정된 회차 없음"
         />
       </div>
       <div className="flex justify-end gap-4 mt-8">

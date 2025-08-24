@@ -12,7 +12,7 @@ interface ModalButton {
 
 interface ModalState {
   type: ModalType;
-  title?: string;
+  title?: string | null;
   message: string | null;
   openModal: (config: Omit<ModalState, "openModal" | "closeModal">) => void;
   closeModal: () => void;
@@ -22,7 +22,7 @@ interface ModalState {
 }
 
 const initialState = {
-  tite: undefined,
+  title: undefined,
   type: null,
   message: null,
   customContent: null,

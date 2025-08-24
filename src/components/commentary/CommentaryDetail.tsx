@@ -3,12 +3,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { ArrowLeft, EllipsisVertical } from "lucide-react";
+import { ArrowLeft, EllipsisVertical, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Commentary, getCommentary } from "@/apis/commentary";
 import { useEffect, useState } from "react";
 
-export const CommentaryDetail = ({ id, isModal }: { id: string; isModal?: boolean }) => {
+export const CommentaryDetail = ({
+  id,
+  isModal,
+  close,
+}: {
+  id: string;
+  isModal?: boolean;
+  close?: () => void;
+}) => {
   const router = useRouter();
   const [commentaryData, setCommentaryData] = useState<Commentary>({
     id: "",
@@ -57,6 +65,11 @@ export const CommentaryDetail = ({ id, isModal }: { id: string; isModal?: boolea
           </Avatar>
           <span className="font-bold">{commentaryData.authorNickName}</span>
           <span className="text-xs text-gray-500">3분전</span>
+          {close && (
+            <Button onClick={close} className="absolute right-10" variant="ghost">
+              <XIcon />
+            </Button>
+          )}
         </div>
 
         <div>

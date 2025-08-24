@@ -15,6 +15,7 @@ import { NumberInput } from "../ui/numberInput";
 import { getCommentary } from "@/apis/commentary";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLoadingStore } from "@/store/loadingStore";
 
 interface CommentaryFormState {
   content: string;
@@ -27,6 +28,7 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
   const params = useParams();
   const commentaryId = params?.id as string;
 
+  const { startLoading, stopLoading } = useLoadingStore();
   const { user } = useAuthStore();
   const [errorCaption, setErrorCaption] = useState<string | null>(null);
   const { values, setFieldValue } = useForm<CommentaryFormState>({
@@ -47,6 +49,8 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
         return await createCommentary(payload);
       }
     },
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["commentaryList"] });
       toast(commentaryId ? "코멘터리가 수정되었습니다!" : "코멘터리가 등록되었습니다!");

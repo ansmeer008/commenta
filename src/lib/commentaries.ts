@@ -2,7 +2,7 @@ import { adminDb } from "@/lib/admin";
 import { Commentary } from "@/apis/commentary";
 
 export async function fetchCommentaryList(
-  authorId: string | null,
+  authorId?: string | null,
   categoryIds?: string[]
 ): Promise<Commentary[]> {
   let query: FirebaseFirestore.Query = adminDb.collection("commentaries");

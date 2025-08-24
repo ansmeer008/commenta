@@ -42,11 +42,13 @@ export const CommentaryItem = ({
   const openDeleteCommentaryModal = () => {
     open({
       type: "confirm",
+      title: "코멘터리 삭제",
       message: "작성하신 코멘터리가 삭제됩니다",
       customContent: null,
       buttonList: [
         {
           text: "취소",
+          variation: "secondary",
           onClick: close => {
             console.log("취소 close");
             close();
@@ -54,6 +56,7 @@ export const CommentaryItem = ({
         },
         {
           text: "삭제",
+          variation: "destructive",
           onClick: close => {
             console.log("삭제 close");
             close();

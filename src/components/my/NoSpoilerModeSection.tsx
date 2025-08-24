@@ -4,16 +4,20 @@ import { useAuthStore } from "@/store/authStore";
 import { updateUserData } from "@/apis/userData";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
+import { useLoadingStore } from "@/store/loadingStore";
 
 export const NoSpoilerModeSection = () => {
   const { user } = useAuthStore();
   const [isNoSpoilerMode, setIsNoSpoilerMode] = useState(user?.isNoSpoilerMode ?? false);
+  const { startLoading, stopLoading } = useLoadingStore();
 
   const { mutate: updateMode, isPending } = useMutation({
     mutationFn: async (mode: boolean) => {
       if (!user) throw new Error("로그인 정보가 없습니다.");
       return updateUserData(user.uid, { isNoSpoilerMode: mode });
     },
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
     onSuccess: () => {
       toast(`스포일러 방지 모드가 ${isNoSpoilerMode ? "켜졌어요" : "꺼졌어요"}`);
     },

@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
     console.error("회원가입 실패:", error);
     let message = "Server error";
     if (error.code === "auth/email-already-exists") message = "이미 등록된 이메일입니다.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    if (error.code === "auth/weak-password") message = "비밀번호는 6자 이상이어야 합니다.";
+    return NextResponse.json({ success: false, error: message }, { status: 400 });
   }
 }

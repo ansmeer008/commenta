@@ -21,7 +21,7 @@ const IMMUTABLE_FIELDS = ["id", "uid", "createdAt"];
 
 export async function PATCH(req: NextRequest, { params }: { params: { uid: string } }) {
   try {
-    const { uid } = params;
+    const { uid } = await params;
     const body = await req.json();
 
     // 수정 불가 필드는 제거

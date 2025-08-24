@@ -7,6 +7,7 @@ import { Navigation } from "@/components/navigation/Navigation";
 import AuthLayout from "../components/auth/AuthLayout";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
+import { GlobalLoading } from "@/components/ui/loading";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -39,7 +40,8 @@ export default function RootLayout({
           </div>
           {modal}
           <SimpleModalRenderer />
-          <Toaster />
+          <Toaster position="top-center" />
+          <GlobalLoading />
         </Providers>
       </body>
     </html>

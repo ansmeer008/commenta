@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useForm } from "@/hooks/useForm";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useLoadingStore } from "@/store/loadingStore";
 
 const SearchList = ({
   list,
@@ -75,6 +76,7 @@ const SearchList = ({
 };
 
 const AddCategoryModalContent = ({ close }: { close: () => void }) => {
+  const { startLoading, stopLoading } = useLoadingStore();
   const { values, setFieldValue } = useForm({
     title: "",
     author: "",
@@ -85,6 +87,8 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
       const { title, author } = values;
       return await addCategory({ title, author });
     },
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
     onSuccess: newCategory => {
       if (newCategory) {
         toast(`${values.title}(${values.author}) 작품이 등록되었습니다!`);
@@ -188,6 +192,7 @@ export const CategorySearch = ({
               if (selectHandler) {
                 selectHandler(category);
                 setSearch("");
+                setIsOpen(false);
               }
             }}
           />

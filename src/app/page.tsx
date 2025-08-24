@@ -11,7 +11,10 @@ export default async function Home() {
 
       <div className="px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold pt-4">실시간 코멘터리</h2>
-        <CommentaryList commentaryList={commentaryList ?? []} />
+        <CommentaryList
+          commentaryList={commentaryList ?? []}
+          placeholder="지금은 코멘터리가 없어요 🐥"
+        />
       </div>
     </div>
   );

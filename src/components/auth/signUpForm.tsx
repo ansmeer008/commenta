@@ -36,11 +36,11 @@ export default function SignUpForm({ close }: { close?: () => void }) {
 
       if (!data?.uid) {
         // 서버에서 예상치 못한 응답이 온 경우
-        toast("회원가입에 실패했습니다.");
+        toast.error("회원가입에 실패했습니다.");
         return;
       }
 
-      toast("회원가입 완료! 자동 로그인 중...");
+      toast.success("회원가입 완료! 자동 로그인 중...");
 
       await signInWithEmailAndPassword(auth, values.email, values.password);
 
@@ -54,13 +54,8 @@ export default function SignUpForm({ close }: { close?: () => void }) {
       if (close) close();
       router.push("/my");
     } catch (error: any) {
-      console.error("회원가입 실패:", error);
-      if (error.code === "auth/email-already-in-use") {
-        setErrorMsg("이미 등록된 이메일입니다.");
-      } else if (error.code === "auth/weak-password") {
-        setErrorMsg("비밀번호는 6자 이상이어야 합니다.");
-      } else {
-        setErrorMsg("회원가입 중 오류가 발생했습니다.");
+      if (error.response?.data?.error) {
+        toast.error(error.response.data.error);
       }
     }
   };

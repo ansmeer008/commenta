@@ -45,15 +45,10 @@ export default function Commentaries() {
   }, [subscribeList]);
 
   const filterIds = filterList.filter(item => item.isSelected).map(filter => filter.id);
-  const {
-    data: commentaryList = [],
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery<Commentary[] | null>({
+  const { data: commentaryList = [], isFetching } = useQuery<Commentary[] | null>({
     queryKey: ["commentaryList", filterIds], // 필터 값이 바뀌면 자동으로 refetch
     queryFn: () => getCommentaryList(filterIds),
-    enabled: filterList.length > 0, // 필터 초기화가 끝난 후 실행
+    enabled: filterIds.length > 0, // 필터 초기화가 끝난 후 실행
   });
 
   return (
@@ -66,7 +61,15 @@ export default function Commentaries() {
       <main>
         <div>
           <CommentaryFilter filterList={filterList} onToggle={handleToggleFilter} />
-          <CommentaryList commentaryList={commentaryList || []} />
+          <CommentaryList
+            commentaryList={commentaryList || []}
+            isLoading={isFetching}
+            placeholder={
+              filterList.length
+                ? "아직 작성된 코멘터리가 없어요...직접 작성해보세요! 🧐"
+                : "구독하면 코멘터리가 생겨요 🤩"
+            }
+          />
         </div>
       </main>
     </div>
