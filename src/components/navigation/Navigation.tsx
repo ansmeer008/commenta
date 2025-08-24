@@ -24,18 +24,8 @@ export const Navigation = () => {
   };
 
   const navMenuList = [
-    {
-      title: "Home",
-      href: "/",
-    },
-    {
-      title: "Subscribe",
-      href: "/commentaries",
-    },
-    {
-      title: "MyPage",
-      href: "/my",
-    },
+    { title: "Commentary", href: "/commentaries" },
+    { title: "MyPage", href: "/my" },
   ];
 
   const checkActiveMenu = (pathname: string, href: string) => {
@@ -48,31 +38,36 @@ export const Navigation = () => {
   return (
     <>
       {isLoggedIn && (
-        <CategorySearch className={"w-full px-8 py-2"} selectHandler={handleSubscribe} />
+        <>
+          <CategorySearch className={"w-full px-8 py-2"} selectHandler={handleSubscribe} />
+          <NavigationMenu className="flex w-full bg-white">
+            <ul className="flex justify-between w-full border-b-2 border-b-gray-100">
+              {navMenuList.map(menu => {
+                const isActive = checkActiveMenu(pathname, menu.href);
+                return (
+                  <li
+                    key={menu.title}
+                    className="flex-1 flex justify-center  hover:bg-gray-100 pt-2 "
+                  >
+                    <NavigationMenuLink asChild>
+                      <Link href={menu.href}>
+                        <div className="group flex flex-col items-center justify-center h-full transition-colors">
+                          <span>{menu.title}</span>
+                          <span
+                            className={`mt-2 h-1 rounded-full transition-all ${
+                              isActive ? "bg-black w-5/5" : "bg-transparent w-5/5"
+                            }`}
+                          />
+                        </div>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </NavigationMenu>
+        </>
       )}
-      <NavigationMenu className="flex w-full bg-white">
-        <ul className="flex justify-between w-full border-b-2 border-b-gray-100">
-          {navMenuList.map(menu => {
-            const isActive = checkActiveMenu(pathname, menu.href);
-            return (
-              <li key={menu.title} className="flex-1 flex justify-center  hover:bg-gray-100 pt-2 ">
-                <NavigationMenuLink asChild>
-                  <Link href={menu.href}>
-                    <div className="group flex flex-col items-center justify-center h-full transition-colors">
-                      <span>{menu.title}</span>
-                      <span
-                        className={`mt-2 h-1 rounded-full transition-all ${
-                          isActive ? "bg-black w-5/5" : "bg-transparent w-5/5"
-                        }`}
-                      />
-                    </div>
-                  </Link>
-                </NavigationMenuLink>
-              </li>
-            );
-          })}
-        </ul>
-      </NavigationMenu>
     </>
   );
 };

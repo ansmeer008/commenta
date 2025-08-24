@@ -36,7 +36,7 @@ export default function Commentaries() {
   useEffect(() => {
     if (subscribeList && subscribeList.length > 0) {
       const filters = subscribeList.map(item => ({
-        isSelected: false,
+        isSelected: true,
         title: item.detail.title,
         id: item.detail.id,
       }));

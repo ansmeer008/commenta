@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { auth } from "@/lib/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { usePathname } from "next/navigation";
 import { fetchUserData } from "@/apis/userData";
 import { toast } from "sonner";
@@ -38,7 +38,20 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       }
     });
 
-    return () => unsubscribe();
+    const handleUnload = () => {
+      try {
+        signOut(auth).catch(err => console.error("Sign out failed", err));
+      } finally {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener("beforeunload", handleUnload);
+    };
   }, [pathname]);
 
   return <>{children}</>;

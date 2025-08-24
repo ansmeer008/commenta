@@ -16,8 +16,8 @@ export const CommentaryFilter = ({ filterList, onToggle }: CommentaryFilterProps
     <div className="flex overflow-x-auto gap-2 pb-4">
       <Badge
         size="lg"
-        variant={filterList.every(f => f.isSelected) ? "default" : "outline"}
-        className="cursor-pointer"
+        variant={filterList.every(f => f.isSelected) ? "highlight" : "outline"}
+        className="cursor-pointer font-bold"
         onClick={() => onToggle("all")}
       >
         All

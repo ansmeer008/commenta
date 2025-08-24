@@ -163,6 +163,7 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
           onChange={value => {
             setFieldValue("episode", value);
           }}
+          placeholder="회차 지정 필요"
           min={0}
           max={99999}
           step={1}

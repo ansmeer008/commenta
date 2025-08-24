@@ -35,7 +35,7 @@ export function SimpleModalRenderer() {
         }}
       >
         {title ? (
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-center">{title}</DialogTitle>
         ) : (
           <VisuallyHidden>
             <DialogTitle>Modal</DialogTitle>

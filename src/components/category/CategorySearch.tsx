@@ -182,6 +182,11 @@ export const CategorySearch = ({
             }}
             value={search ?? ""}
             onFocus={() => setIsOpen(true)}
+            onKeyDown={e => {
+              if (e.key === "Enter" && search.trim().length) {
+                setTriggerSearch(search.trim());
+              }
+            }}
           />
         </div>
         {isOpen && (
