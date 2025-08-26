@@ -3,25 +3,41 @@
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { NoSpoilerModeSection } from "@/components/my/NoSpoilerModeSection";
 import { SubscibeSection } from "@/components/my/SubscribeSection";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { getCommentaryList } from "@/apis/commentaries";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Profile } from "@/components/ui/profile";
+import { updateUserData } from "@/apis/userData";
+import { toast } from "sonner";
+import { useLoadingStore } from "@/store/loadingStore";
 
 export default function MyPage() {
   const { user, logout } = useAuthStore();
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoadingStore();
 
   const {
     data: commentaryList,
-    isLoading,
+    isFetching,
     isError,
   } = useQuery({
     queryKey: ["commentaryList", user?.uid],
     queryFn: () => getCommentaryList(undefined, user?.uid),
     enabled: !!user?.uid,
+  });
+
+  const { mutate: updateUserProfile } = useMutation({
+    mutationFn: async (url: string | null) => await updateUserData(user!.uid, { profileUrl: url }),
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
+    onSuccess: () => {
+      toast.success("프로필이 업데이트되었습니다!");
+    },
+    onError: () => {
+      toast.error("프로필 업데이트에 실패했습니다.");
+    },
   });
 
   const handleLogout = async () => {
@@ -44,11 +60,7 @@ export default function MyPage() {
 
       <main className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
-          <Avatar className="size-20">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-
+          <Profile profileUrl={user?.profileUrl || null} onFileChange={updateUserProfile} />
           <div className="flex flex-col">
             <span className="font-bold text-lg">{user?.nickname}</span>
             <span className="text-base text-gray-500">{user?.email}</span>
@@ -60,7 +72,7 @@ export default function MyPage() {
         </div>
         <div className="flex flex-col gap-2 rounded-lg">
           <p className="text-lg font-bold">내가 쓴 코멘터리</p>
-          <CommentaryList commentaryList={commentaryList || []} />
+          <CommentaryList commentaryList={commentaryList || []} isLoading={isFetching} />
         </div>
       </main>
     </div>

@@ -20,6 +20,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
       subscribes: [],
       isNoSpoilerMode: false,
+      profileUrl: null,
     });
 
     return NextResponse.json({ uid: userRecord.uid });

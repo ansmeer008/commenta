@@ -2,7 +2,7 @@
 import { CommentaryImage } from "./CommentaryImage";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { Commentary } from "@/apis/commentary";
@@ -20,6 +20,7 @@ export const CommentaryItem = ({
   content,
   authorId,
   authorNickName,
+  authorProfileUrl,
   categoryTitle,
 
   className,
@@ -73,8 +74,10 @@ export const CommentaryItem = ({
           <div className="flex justify-between">
             <div className="flex gap-2 items-center">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={authorProfileUrl ?? undefined} alt="Profile" />
+                <AvatarFallback>
+                  <User />
+                </AvatarFallback>
               </Avatar>
               <span className="font-bold">{authorNickName}</span>
               <span className="text-xs text-gray-500">3분전</span>

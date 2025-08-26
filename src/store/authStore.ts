@@ -12,6 +12,7 @@ export interface UserData {
   createdAt: Date;
   subscribes: Subscribe[];
   isNoSpoilerMode: boolean;
+  profileUrl: string | null;
 }
 interface AuthState {
   user: UserData | null;

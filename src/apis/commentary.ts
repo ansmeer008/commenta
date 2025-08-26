@@ -6,6 +6,7 @@ export interface Commentary {
   content: string;
   authorId: string;
   authorNickName: string;
+  authorProfileUrl: string | null;
   categoryTitle: string;
   categoryId: string;
   isSpoiler?: boolean;
@@ -31,7 +32,7 @@ export const getCommentary = async (commentaryId: string): Promise<Commentary | 
 };
 
 export const createCommentary = async (
-  body: Omit<Commentary, "id" | "createdAt" | "updatedAt">
+  body: Omit<Commentary, "id" | "createdAt" | "updatedAt" | "authorProfileUrl" | "authorNickname">
 ) => {
   try {
     const res = await axios.post("/api/commentary", body);

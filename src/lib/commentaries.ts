@@ -27,6 +27,7 @@ export async function fetchCommentaryList(
       content: data.content,
       episode: data.episode,
       authorNickName: data.authorNickName,
+      authorProfileUrl: data.authorProfileUrl,
       categoryTitle: data.categoryTitle,
       createdAt: data.createdAt.toDate().toISOString(),
       updatedAt: data.updatedAt.toDate().toISOString(),
