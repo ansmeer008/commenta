@@ -7,27 +7,36 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-      imgUrl,
+      imgUrlList,
       content,
       authorId,
       authorNickName,
+      authorProfileUrl,
       categoryId,
       categoryTitle,
       isSpoiler = false,
       episode,
     } = body;
 
-    if (!content || !authorId || !authorNickName || !categoryId || !categoryTitle) {
+    if (
+      !content ||
+      !authorId ||
+      !authorNickName ||
+      !categoryId ||
+      !categoryTitle ||
+      !authorProfileUrl
+    ) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     const now = Timestamp.now();
 
     const newCommentary = {
-      imgUrl: imgUrl || null,
+      imgUrlList: imgUrlList || null,
       content,
       authorId,
       authorNickName,
+      authorProfileUrl,
       categoryId,
       categoryTitle,
       isSpoiler,
@@ -58,5 +67,44 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error creating commentary:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    const commentaryId = searchParams.get("id");
+
+    if (!commentaryId) {
+      return NextResponse.json({ success: false, error: "Missing commentaryId" }, { status: 400 });
+    }
+
+    await adminDb.runTransaction(async t => {
+      const commentaryRef = adminDb.collection("commentaries").doc(commentaryId);
+      const commentaryDoc = await t.get(commentaryRef);
+
+      if (!commentaryDoc.exists) {
+        throw new Error("Commentary not found");
+      }
+
+      const { categoryId } = commentaryDoc.data() as { categoryId: string };
+
+      // 코멘터리 삭제
+      t.delete(commentaryRef);
+
+      // usageCount 감소
+      const categoryRef = adminDb.collection("categories").doc(categoryId);
+      t.update(categoryRef, {
+        usageCount: FieldValue.increment(-1),
+      });
+    });
+
+    return NextResponse.json(
+      { success: true, message: "Commentary deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting commentary:", error);
+    return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
   }
 }

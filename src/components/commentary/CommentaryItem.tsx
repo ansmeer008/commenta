@@ -1,11 +1,11 @@
 "use client";
-import { CommentaryImage } from "./CommentaryImage";
+import { Image } from "../ui/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { EllipsisVertical, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouteModal } from "@/hooks/useRouteModal";
-import { Commentary } from "@/apis/commentary";
+import { Commentary, deleteCommentary } from "@/apis/commentary";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,10 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLoadingStore } from "@/store/loadingStore";
 
 export const CommentaryItem = ({
   id,
-  imgUrl,
+  imgUrlList,
   content,
   authorId,
   authorNickName,
@@ -27,8 +29,20 @@ export const CommentaryItem = ({
   isSpoiler,
   isAuthor,
 }: Commentary & { className: string; isAuthor: boolean }) => {
+  const queryClient = useQueryClient();
   const { openRouteModal } = useRouteModal();
   const { open } = useSimpleModal();
+  const { startLoading, stopLoading } = useLoadingStore();
+
+  const deleteMutation = useMutation({
+    mutationFn: (commentaryId: string) => deleteCommentary(commentaryId),
+    onMutate: () => startLoading(),
+    onSettled: () => stopLoading(),
+    onSuccess: () => {
+      // 삭제 성공하면 commentaryList query를 무효화
+      queryClient.invalidateQueries({ queryKey: ["commentaryList"] });
+    },
+  });
 
   const preview = content.length > 100 ? `${content.slice(0, 100)}...` : content;
 
@@ -51,15 +65,14 @@ export const CommentaryItem = ({
           text: "취소",
           variation: "secondary",
           onClick: close => {
-            console.log("취소 close");
             close();
           },
         },
         {
           text: "삭제",
           variation: "destructive",
-          onClick: close => {
-            console.log("삭제 close");
+          onClick: async close => {
+            await deleteMutation.mutateAsync(id);
             close();
           },
         },
@@ -124,8 +137,14 @@ export const CommentaryItem = ({
         <div className="">
           <p>{preview}</p>
         </div>
+        {imgUrlList?.length && (
+          <div className="flex gap-2">
+            {imgUrlList.map(img => {
+              return <Image key={img} url={img} />;
+            })}
+          </div>
+        )}
       </div>
-      {imgUrl && <CommentaryImage imgUrl={imgUrl} className="flex-1" />}
     </div>
   );
 };

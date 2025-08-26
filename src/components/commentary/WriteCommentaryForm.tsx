@@ -16,12 +16,14 @@ import { getCommentary } from "@/apis/commentary";
 import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoadingStore } from "@/store/loadingStore";
+import { ImageBox } from "../ui/imageBox";
 
 interface CommentaryFormState {
   content: string;
   category: Pick<Category, "title" | "id"> | null;
   isSpoiler: boolean;
   episode: number | null;
+  imgUrls: string[];
 }
 
 export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
@@ -36,13 +38,12 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
     category: null,
     isSpoiler: false,
     episode: null,
+    imgUrls: [],
   });
 
   const queryClient = useQueryClient();
   const { mutateAsync: mutateCommentary, isPending } = useMutation({
-    mutationFn: async (
-      payload: Omit<Commentary, "id" | "createdAt" | "updatedAt" | "authorProfileUrl">
-    ) => {
+    mutationFn: async (payload: Omit<Commentary, "id" | "createdAt" | "updatedAt">) => {
       if (commentaryId) {
         // 수정
         return await editCommentary({ id: commentaryId, ...payload });
@@ -88,11 +89,13 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
     await mutateCommentary({
       authorId: user.uid,
       authorNickName: user.nickname,
+      authorProfileUrl: user.profileUrl,
       categoryId: values.category!.id,
       categoryTitle: values.category!.title,
       content: values.content,
       episode: values.episode!,
       isSpoiler: values.isSpoiler,
+      imgUrlList: values.imgUrls,
     });
   };
 
@@ -109,6 +112,7 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
         });
         setFieldValue("isSpoiler", commentaryData.isSpoiler ?? false);
         setFieldValue("episode", commentaryData.episode ?? 0);
+        setFieldValue("imgUrls", commentaryData.imgUrlList ?? []);
       }
     };
 
@@ -145,6 +149,13 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
           selectBtnText="선택하기"
         />
       </div>
+      <ImageBox
+        images={values.imgUrls}
+        onImagesChange={imgUrlList => {
+          setFieldValue("imgUrls", imgUrlList);
+        }}
+        maxImages={5}
+      />
       <div className="flex flex-col gap-2 items-end">
         <Textarea
           className="resize-none h-30"

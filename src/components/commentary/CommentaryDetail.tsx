@@ -6,7 +6,17 @@ import { Button } from "../ui/button";
 import { ArrowLeft, EllipsisVertical, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Commentary, getCommentary } from "@/apis/commentary";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Spinner } from "../ui/spinner";
+import { Image } from "../ui/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
+import { Card, CardContent } from "../ui/card";
 
 export const CommentaryDetail = ({
   id,
@@ -18,26 +28,19 @@ export const CommentaryDetail = ({
   close?: () => void;
 }) => {
   const router = useRouter();
-  const [commentaryData, setCommentaryData] = useState<Commentary>({
-    id: "",
-    content: "",
-    authorId: "",
-    authorNickName: "",
-    categoryTitle: "",
-    categoryId: "",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
-  const init = async (commentaryId: string) => {
-    const data = await getCommentary(commentaryId);
-    if (data) {
-      setCommentaryData(data);
-    }
-  };
 
-  useEffect(() => {
-    init(id);
-  }, [id]);
+  const {
+    data: commentaryData,
+    isLoading,
+    isError,
+  } = useQuery<Commentary | null>({
+    queryKey: ["commentary", id],
+    queryFn: async () => await getCommentary(id),
+    enabled: !!id,
+  });
+
+  if (isLoading) return <Spinner />;
+  if (isError || !commentaryData) return <div>Error loading commentary</div>;
 
   return (
     <div className="flex flex-col gap-8">
@@ -60,8 +63,8 @@ export const CommentaryDetail = ({
       <div className="flex flex-col gap-2 border-1 rounded-lg p-4">
         <div className="flex gap-2 items-center">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={commentaryData.authorProfileUrl || undefined} />
+            <AvatarFallback></AvatarFallback>
           </Avatar>
           <span className="font-bold">{commentaryData.authorNickName}</span>
           <span className="text-xs text-gray-500">3분전</span>
@@ -76,6 +79,24 @@ export const CommentaryDetail = ({
           <Badge variant="secondary">{commentaryData.categoryTitle}</Badge>
         </div>
         <p>{commentaryData.content}</p>
+
+        {commentaryData.imgUrlList?.length && (
+          <Carousel>
+            <CarouselContent>
+              {commentaryData.imgUrlList.map(img => (
+                <CarouselItem key={img} className="w-full h-[300px] md:h-[400px]">
+                  <Card className="w-full h-full p-0">
+                    <CardContent className="p-0 w-full h-full">
+                      <Image url={img} className="w-full h-full object-cover" />
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+        )}
 
         {/* TODO:: 댓글 기능 추가 시 사용 */}
         {/* <div className="mt-4">

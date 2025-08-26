@@ -30,49 +30,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest) {
-  try {
-    const searchParams = req.nextUrl.searchParams;
-    const commentaryId = searchParams.get("id");
-
-    if (!commentaryId) {
-      return NextResponse.json({ success: false, error: "Missing commentaryId" }, { status: 400 });
-    }
-
-    await adminDb.runTransaction(async t => {
-      const commentaryRef = adminDb.collection("commentaries").doc(commentaryId);
-      const commentaryDoc = await t.get(commentaryRef);
-
-      if (!commentaryDoc.exists) {
-        throw new Error("Commentary not found");
-      }
-
-      const { categoryId } = commentaryDoc.data() as { categoryId: string };
-
-      // 코멘터리 삭제
-      t.delete(commentaryRef);
-
-      // usageCount 감소
-      const categoryRef = adminDb.collection("categories").doc(categoryId);
-      t.update(categoryRef, {
-        usageCount: FieldValue.increment(-1),
-      });
-    });
-
-    return NextResponse.json(
-      { success: true, message: "Commentary deleted successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error deleting commentary:", error);
-    return NextResponse.json({ success: false, error: "Server error" }, { status: 500 });
-  }
-}
-
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { id, content, imgUrl, isSpoiler, episode } = body;
+    const { id, content, imgUrlList, isSpoiler, episode } = body;
 
     if (!id) {
       return NextResponse.json({ success: false, error: "Missing commentaryId" }, { status: 400 });
@@ -90,7 +51,7 @@ export async function PATCH(req: NextRequest) {
     };
 
     if (content !== undefined) updatedData.content = content;
-    if (imgUrl !== undefined) updatedData.imgUrl = imgUrl;
+    if (imgUrlList !== undefined) updatedData.imgUrl = imgUrlList;
     if (isSpoiler !== undefined) updatedData.isSpoiler = isSpoiler;
     if (episode !== undefined) updatedData.episode = episode;
 

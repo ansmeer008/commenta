@@ -2,7 +2,7 @@ import axios from "axios";
 
 export interface Commentary {
   id: string;
-  imgUrl?: string;
+  imgUrlList?: string[];
   content: string;
   authorId: string;
   authorNickName: string;
@@ -32,7 +32,7 @@ export const getCommentary = async (commentaryId: string): Promise<Commentary | 
 };
 
 export const createCommentary = async (
-  body: Omit<Commentary, "id" | "createdAt" | "updatedAt" | "authorProfileUrl" | "authorNickname">
+  body: Omit<Commentary, "id" | "createdAt" | "updatedAt">
 ) => {
   try {
     const res = await axios.post("/api/commentary", body);
@@ -51,9 +51,7 @@ export const createCommentary = async (
 
 export const deleteCommentary = async (commentaryId: string) => {
   try {
-    const res = await axios.post("/api/commentary", {
-      params: { id: commentaryId },
-    });
+    const res = await axios.delete(`/api/commentary?id=${commentaryId}`);
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to delete commentary");
@@ -73,7 +71,7 @@ export const editCommentary = async (
   } & Partial<Omit<Commentary, "id">>
 ) => {
   try {
-    const res = await axios.post("/api/commentary", body);
+    const res = await axios.patch(`/api/commentary/${body.id}`, body);
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to edit commentary");
