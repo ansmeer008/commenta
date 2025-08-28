@@ -3,7 +3,12 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import {
+  browserSessionPersistence,
+  onAuthStateChanged,
+  setPersistence,
+  signOut,
+} from "firebase/auth";
 import { usePathname } from "next/navigation";
 import { fetchUserData } from "@/apis/userData";
 import { toast } from "sonner";
@@ -17,6 +22,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const publicPath = ["/", "/login", "/signup"];
 
   useEffect(() => {
+    // 세션 Persistence 설정 (브라우저 종료 시 로그아웃, 새로고침 시 유지)
+    setPersistence(auth, browserSessionPersistence).catch(err => {
+      console.error("Firebase persistence error:", err);
+    });
+
     const unsubscribe = onAuthStateChanged(auth, async user => {
       if (user) {
         setIsLoggedIn(true);
@@ -38,20 +48,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       }
     });
 
-    const handleUnload = () => {
-      try {
-        signOut(auth).catch(err => console.error("Sign out failed", err));
-      } finally {
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    };
-    window.addEventListener("beforeunload", handleUnload);
-
-    return () => {
-      unsubscribe();
-      window.removeEventListener("beforeunload", handleUnload);
-    };
+    return () => unsubscribe();
   }, [pathname]);
 
   return <>{children}</>;
