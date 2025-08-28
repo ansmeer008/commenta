@@ -24,7 +24,7 @@ export default function MyPage() {
     isError,
   } = useQuery({
     queryKey: ["commentaryList", user?.uid],
-    queryFn: () => getCommentaryList(undefined, user?.uid),
+    queryFn: () => getCommentaryList(undefined, user?.uid, user?.subscribes),
     enabled: !!user?.uid,
   });
 

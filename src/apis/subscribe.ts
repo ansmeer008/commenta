@@ -24,7 +24,7 @@ export const addSubscription = async (
 ) => {
   try {
     const res = await axios.post(`/api/subscribe/${uid}`, body);
-    console.log(res);
+
     return res;
   } catch (error) {
     console.error("Error add subscribe:", error);
@@ -41,7 +41,7 @@ export const updateSubscription = async (
 ) => {
   try {
     const res = await axios.patch(`/api/subscribe/${uid}`, body);
-    console.log(res);
+
     return res;
   } catch (error) {
     console.error("Error add subscribe:", error);
@@ -52,7 +52,6 @@ export const updateSubscription = async (
 export const deleteSubscription = async (uid: string, id: string) => {
   try {
     const res = await axios.delete(`/api/subscribe/${uid}`, { data: { id } });
-    console.log(res);
     return res;
   } catch (error) {
     console.error("Error delete subscribe:", error);

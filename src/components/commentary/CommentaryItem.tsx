@@ -15,6 +15,54 @@ import {
 import { useSimpleModal } from "@/hooks/useSimpleModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoadingStore } from "@/store/loadingStore";
+import { useState } from "react";
+import { useAuthStore } from "@/store/authStore";
+
+const Content = ({
+  content,
+  isSpoiler,
+  imgUrlList,
+}: {
+  content: string;
+  isSpoiler: boolean;
+  imgUrlList: string[];
+}) => {
+  const [revealed, setRevealed] = useState(false);
+
+  return (
+    <div className="relative">
+      <div
+        className={`whitespace-pre-line transition-all ${
+          revealed || !isSpoiler ? "blur-0" : "blur-md select-none"
+        }`}
+      >
+        <p>{content}</p>
+        {imgUrlList && imgUrlList?.length > 0 && (
+          <div className="flex gap-2">
+            {imgUrlList.map(img => {
+              return <Image key={img} url={img} />;
+            })}
+          </div>
+        )}
+      </div>
+
+      {!revealed && isSpoiler && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={e => {
+              e.stopPropagation();
+              setRevealed(true);
+            }}
+          >
+            스포일러 보기
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const CommentaryItem = ({
   id,
@@ -33,6 +81,9 @@ export const CommentaryItem = ({
   const { openRouteModal } = useRouteModal();
   const { open } = useSimpleModal();
   const { startLoading, stopLoading } = useLoadingStore();
+  const { user } = useAuthStore();
+
+  const isSpoilerTarget = user?.isNoSpoilerMode && authorId !== user?.uid && isSpoiler;
 
   const deleteMutation = useMutation({
     mutationFn: (commentaryId: string) => deleteCommentary(commentaryId),
@@ -134,16 +185,11 @@ export const CommentaryItem = ({
             </div>
           </div>
         </div>
-        <div className="">
-          <p>{preview}</p>
-        </div>
-        {imgUrlList && imgUrlList?.length > 0 && (
-          <div className="flex gap-2">
-            {imgUrlList.map(img => {
-              return <Image key={img} url={img} />;
-            })}
-          </div>
-        )}
+        <Content
+          content={preview}
+          isSpoiler={isSpoilerTarget || false}
+          imgUrlList={imgUrlList || []}
+        />
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       const userSnap = await adminDb.collection("users").doc(data.authorId).get();
       if (userSnap.exists) {
         const userData = userSnap.data() as any;
-        authorNickName = userData.nickName ?? null;
+        authorNickName = userData.nickname ?? null;
         authorProfileUrl = userData.profileUrl ?? null;
       }
     }

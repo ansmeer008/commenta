@@ -80,7 +80,7 @@ export const CommentaryDetail = ({
         </div>
         <p>{commentaryData.content}</p>
 
-        {commentaryData.imgUrlList?.length && (
+        {commentaryData.imgUrlList && commentaryData.imgUrlList?.length > 0 && (
           <Carousel>
             <CarouselContent>
               {commentaryData.imgUrlList.map(img => (

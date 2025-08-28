@@ -189,8 +189,8 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
         <div className="flex gap-1">
           <Checkbox
             id="spoiler"
-            onChange={() => {
-              setFieldValue("isSpoiler", !values.isSpoiler);
+            onCheckedChange={(checked: boolean) => {
+              setFieldValue("isSpoiler", checked);
             }}
           />
           <Label htmlFor="spoiler">스포일러 표기</Label>

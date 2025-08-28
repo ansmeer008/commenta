@@ -1,10 +1,12 @@
 import { adminDb } from "@/lib/admin";
 import { Commentary } from "@/apis/commentary";
 import { FieldPath } from "firebase-admin/firestore";
+import { Subscribe } from "@/store/authStore";
 
 export async function fetchCommentaryList(
   authorId?: string | null,
-  categoryIds?: string[]
+  categoryIds?: string[],
+  subscribes?: Subscribe[]
 ): Promise<Commentary[]> {
   let query: FirebaseFirestore.Query = adminDb.collection("commentaries");
 
@@ -18,12 +20,23 @@ export async function fetchCommentaryList(
 
   const snapshot = await query.orderBy("createdAt", "desc").get();
 
-  const commentaries = snapshot.docs.map(doc => ({
+  let commentaries = snapshot.docs.map(doc => ({
     id: doc.id,
     ...(doc.data() as any),
   }));
 
   if (commentaries.length === 0) return [];
+
+  // 구독 episode 정보 기반 필터링
+  if (subscribes?.length) {
+    const subMap = new Map(subscribes.map(s => [s.id, s.episode]));
+    commentaries = commentaries.filter(c => {
+      if (c.episode == null) return true; // episode 없는 건 항상 통과
+      const myEpisode = subMap.get(c.categoryId);
+      if (myEpisode == null) return false; // 혹시라도 구독 정보 없으면 배제
+      return c.episode <= myEpisode; // 스포일러 컷
+    });
+  }
 
   // 고유 authorId 추출
   const authorIds = [...new Set(commentaries.map(c => c.authorId))];

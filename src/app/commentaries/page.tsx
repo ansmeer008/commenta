@@ -47,7 +47,7 @@ export default function Commentaries() {
   const filterIds = filterList.filter(item => item.isSelected).map(filter => filter.id);
   const { data: commentaryList = [], isFetching } = useQuery<Commentary[] | null>({
     queryKey: ["commentaryList", filterIds], // 필터 값이 바뀌면 자동으로 refetch
-    queryFn: () => getCommentaryList(filterIds),
+    queryFn: () => getCommentaryList(filterIds, undefined, user?.subscribes),
     enabled: filterIds.length > 0, // 필터 초기화가 끝난 후 실행
   });
 

@@ -25,7 +25,7 @@ export default function LoginForm({ close }: { close?: () => void }) {
       }
 
       const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
-      console.log("로그인 성공:", userCredential.user);
+
       setErrorMsg("");
       if (close) {
         close();
