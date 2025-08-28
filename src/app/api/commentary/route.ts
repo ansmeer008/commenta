@@ -10,22 +10,13 @@ export async function POST(req: NextRequest) {
       imgUrlList,
       content,
       authorId,
-      authorNickName,
-      authorProfileUrl,
       categoryId,
       categoryTitle,
       isSpoiler = false,
       episode,
     } = body;
 
-    if (
-      !content ||
-      !authorId ||
-      !authorNickName ||
-      !categoryId ||
-      !categoryTitle ||
-      !authorProfileUrl
-    ) {
+    if (!content || !authorId || !categoryId || !categoryTitle) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -35,8 +26,6 @@ export async function POST(req: NextRequest) {
       imgUrlList: imgUrlList || null,
       content,
       authorId,
-      authorNickName,
-      authorProfileUrl,
       categoryId,
       categoryTitle,
       isSpoiler,

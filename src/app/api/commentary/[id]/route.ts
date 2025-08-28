@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id: commentaryId } = await params;
+    const { id: commentaryId } = params;
 
     if (!commentaryId) {
       return NextResponse.json(
@@ -20,8 +20,31 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ success: false, error: "Commentary not found" }, { status: 404 });
     }
 
+    const data = docSnap.data() as any;
+    let authorNickName = null;
+    let authorProfileUrl = null;
+
+    if (data?.authorId) {
+      const userSnap = await adminDb.collection("users").doc(data.authorId).get();
+      if (userSnap.exists) {
+        const userData = userSnap.data() as any;
+        authorNickName = userData.nickName ?? null;
+        authorProfileUrl = userData.profileUrl ?? null;
+      }
+    }
+
     return NextResponse.json(
-      { success: true, data: { id: docSnap.id, ...docSnap.data() } },
+      {
+        success: true,
+        data: {
+          id: docSnap.id,
+          ...data,
+          authorNickName,
+          authorProfileUrl,
+          createdAt: data.createdAt.toDate().toISOString(),
+          updatedAt: data.updatedAt.toDate().toISOString(),
+        },
+      },
       { status: 200 }
     );
   } catch (error) {

@@ -32,7 +32,7 @@ export const getCommentary = async (commentaryId: string): Promise<Commentary | 
 };
 
 export const createCommentary = async (
-  body: Omit<Commentary, "id" | "createdAt" | "updatedAt">
+  body: Omit<Commentary, "id" | "createdAt" | "updatedAt" | "authorNickName" | "authorProfileUrl">
 ) => {
   try {
     const res = await axios.post("/api/commentary", body);

@@ -43,7 +43,12 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
 
   const queryClient = useQueryClient();
   const { mutateAsync: mutateCommentary, isPending } = useMutation({
-    mutationFn: async (payload: Omit<Commentary, "id" | "createdAt" | "updatedAt">) => {
+    mutationFn: async (
+      payload: Omit<
+        Commentary,
+        "id" | "createdAt" | "updatedAt" | "authorNickName" | "authorProfileUrl"
+      >
+    ) => {
       if (commentaryId) {
         // 수정
         return await editCommentary({ id: commentaryId, ...payload });
@@ -88,8 +93,6 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
 
     await mutateCommentary({
       authorId: user.uid,
-      authorNickName: user.nickname,
-      authorProfileUrl: user.profileUrl,
       categoryId: values.category!.id,
       categoryTitle: values.category!.title,
       content: values.content,

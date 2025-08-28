@@ -1,5 +1,6 @@
 import { adminDb } from "@/lib/admin";
 import { Commentary } from "@/apis/commentary";
+import { FieldPath } from "firebase-admin/firestore";
 
 export async function fetchCommentaryList(
   authorId?: string | null,
@@ -17,21 +18,37 @@ export async function fetchCommentaryList(
 
   const snapshot = await query.orderBy("createdAt", "desc").get();
 
-  return snapshot.docs.map(doc => {
-    const data = doc.data() as any;
+  const commentaries = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...(doc.data() as any),
+  }));
 
+  if (commentaries.length === 0) return [];
+
+  // 고유 authorId 추출
+  const authorIds = [...new Set(commentaries.map(c => c.authorId))];
+
+  // Firestore `in` 은 30개 제한 → 나눠서 쿼리
+  const userDocs: FirebaseFirestore.QueryDocumentSnapshot[] = [];
+  for (let i = 0; i < authorIds.length; i += 30) {
+    const batchIds = authorIds.slice(i, i + 30);
+    const snap = await adminDb
+      .collection("users")
+      .where(FieldPath.documentId(), "in", batchIds)
+      .get();
+    userDocs.push(...snap.docs);
+  }
+
+  const usersMap = new Map(userDocs.map(doc => [doc.id, doc.data()]));
+
+  return commentaries.map(c => {
+    const author = usersMap.get(c.authorId);
     return {
-      id: doc.id,
-      authorId: data.authorId,
-      categoryId: data.categoryId,
-      content: data.content,
-      episode: data.episode,
-      authorNickName: data.authorNickName,
-      authorProfileUrl: data.authorProfileUrl,
-      categoryTitle: data.categoryTitle,
-      imgUrlList: data.imgUrlList,
-      createdAt: data.createdAt.toDate().toISOString(),
-      updatedAt: data.updatedAt.toDate().toISOString(),
-    };
+      ...c,
+      authorNickName: author?.nickname ?? null,
+      authorProfileUrl: author?.profileUrl ?? null,
+      createdAt: c.createdAt.toDate().toISOString(),
+      updatedAt: c.updatedAt.toDate().toISOString(),
+    } as Commentary;
   });
 }

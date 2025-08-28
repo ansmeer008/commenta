@@ -137,7 +137,7 @@ export const CommentaryItem = ({
         <div className="">
           <p>{preview}</p>
         </div>
-        {imgUrlList?.length && (
+        {imgUrlList && imgUrlList?.length > 0 && (
           <div className="flex gap-2">
             {imgUrlList.map(img => {
               return <Image key={img} url={img} />;
