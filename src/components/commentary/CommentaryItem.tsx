@@ -72,18 +72,22 @@ export const CommentaryItem = ({
   authorNickName,
   authorProfileUrl,
   categoryTitle,
+  episode,
 
   className,
   isSpoiler,
   isAuthor,
-}: Commentary & { className: string; isAuthor: boolean }) => {
+  isClickable = true,
+}: Commentary & { className: string; isAuthor: boolean; isClickable?: boolean }) => {
   const queryClient = useQueryClient();
   const { openRouteModal } = useRouteModal();
   const { open } = useSimpleModal();
   const { startLoading, stopLoading } = useLoadingStore();
   const { user } = useAuthStore();
 
-  const isSpoilerTarget = user?.isNoSpoilerMode && authorId !== user?.uid && isSpoiler;
+  const isSpoilerTarget = user
+    ? user?.isNoSpoilerMode && authorId !== user?.uid && isSpoiler
+    : isSpoiler;
 
   const deleteMutation = useMutation({
     mutationFn: (commentaryId: string) => deleteCommentary(commentaryId),
@@ -132,7 +136,10 @@ export const CommentaryItem = ({
   };
 
   return (
-    <div className={`flex justify-between py-8 ${className}`} onClick={openDetailCommentaryModal}>
+    <div
+      className={`flex justify-between py-8 ${className}`}
+      onClick={isClickable ? openDetailCommentaryModal : () => {}}
+    >
       <div className="flex flex-col flex-1 gap-2">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between">
@@ -180,8 +187,11 @@ export const CommentaryItem = ({
             )}
           </div>
           <div>
-            <div className="flex gap-0.5">
+            <div className="flex items-center gap-0.5">
               <Badge variant="secondary">{categoryTitle}</Badge>
+              {episode && episode > 0 && (
+                <span className="text-xs text-red-400 ml-1">{episode}화</span>
+              )}
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ import { useRouteModal } from "@/hooks/useRouteModal";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { CategoryRecommender } from "@/components/category/CategoryRecommender";
 
 export default function Commentaries() {
   const [filterList, setFilterList] = useState<Filter[]>([]);
@@ -59,8 +60,12 @@ export default function Commentaries() {
       </header>
 
       <main>
-        <div>
-          <CommentaryFilter filterList={filterList} onToggle={handleToggleFilter} />
+        <div className="flex flex-col gap-8">
+          {!filterList.length && <CategoryRecommender />}
+
+          {filterList.length > 0 && (
+            <CommentaryFilter filterList={filterList} onToggle={handleToggleFilter} />
+          )}
           <CommentaryList
             commentaryList={commentaryList || []}
             isLoading={isFetching}

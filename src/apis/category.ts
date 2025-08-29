@@ -38,3 +38,22 @@ export const searchCategoryList = async (search: string): Promise<Category[] | n
     return null;
   }
 };
+
+export const getCategoriesByCount = async (
+  type: "usage" | "subscribe",
+  limit: number = 5
+): Promise<Category[] | null> => {
+  try {
+    const res = await axios.get(`/api/category`, {
+      params: { type, limit },
+    });
+
+    if (res.data.success) {
+      return res.data.categories;
+    }
+    return null;
+  } catch (error) {
+    console.error("카테고리 조회 실패:", error);
+    return null;
+  }
+};

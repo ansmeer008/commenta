@@ -172,7 +172,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { uid: strin
 
 export async function DELETE(req: NextRequest, { params }: { params: { uid: string } }) {
   try {
-    const { uid } = params;
+    const { uid } = await params;
     const body = await req.json();
     const { id } = body;
 

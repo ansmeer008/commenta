@@ -22,10 +22,12 @@ export const CommentaryList = ({
   commentaryList,
   isLoading,
   placeholder,
+  isClickable = true,
 }: {
   commentaryList: Commentary[];
   isLoading?: boolean;
   placeholder?: string;
+  isClickable?: boolean;
 }) => {
   const { user } = useAuthStore();
 
@@ -38,6 +40,7 @@ export const CommentaryList = ({
       {commentaryList.map((commentary, index) => (
         <CommentaryItem
           key={commentary.id}
+          isClickable={isClickable}
           isAuthor={user?.uid === commentary.authorId}
           {...commentary}
           className={`${index < commentaryList.length - 1 ? "border-b border-gray-300" : ""} cursor-pointer`}

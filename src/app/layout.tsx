@@ -36,7 +36,7 @@ export default function RootLayout({
             <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
               <AuthLayout>{children}</AuthLayout>
             </div>
-            <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer>
+            {/* <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer> */}
           </div>
           {modal}
           <SimpleModalRenderer />

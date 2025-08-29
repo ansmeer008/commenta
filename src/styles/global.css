@@ -162,3 +162,12 @@
     }
   }
 }
+
+@keyframes scroll-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%); /* 전체 높이의 절반만큼 위로 */
+  }
+}

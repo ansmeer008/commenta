@@ -65,3 +65,44 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, error: "작품 등록 실패" }, { status: 500 });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get("type") || "usage"; // "usage" | "subscribe"
+    const limitCount = Number(searchParams.get("limit") || 5);
+
+    let query;
+
+    if (type === "subscribe") {
+      query = adminDb.collection("categories").orderBy("subscribeCount", "desc").limit(limitCount);
+    } else {
+      query = adminDb.collection("categories").orderBy("usageCount", "desc").limit(limitCount);
+    }
+
+    const snapshot = await query.get();
+
+    const categories = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...(doc.data() as any),
+    }));
+
+    return NextResponse.json(
+      {
+        success: true,
+        categories,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("추천 카테고리 조회 실패:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "추천 카테고리 조회 중 오류가 발생했습니다.",
+        categories: [],
+      },
+      { status: 500 }
+    );
+  }
+}
