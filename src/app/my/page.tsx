@@ -7,13 +7,14 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { getCommentaryList } from "@/apis/commentaries";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Profile } from "@/components/ui/profile";
 import { updateUserData } from "@/apis/userData";
 import { toast } from "sonner";
 import { useLoadingStore } from "@/store/loadingStore";
 
 export default function MyPage() {
+  const queryClient = useQueryClient();
   const { user, logout } = useAuthStore();
   const router = useRouter();
   const { startLoading, stopLoading } = useLoadingStore();
@@ -34,6 +35,7 @@ export default function MyPage() {
     onSettled: () => stopLoading(),
     onSuccess: () => {
       toast.success("프로필이 업데이트되었습니다!");
+      queryClient.invalidateQueries({ queryKey: ["commentaryList"] });
     },
     onError: () => {
       toast.error("프로필 업데이트에 실패했습니다.");

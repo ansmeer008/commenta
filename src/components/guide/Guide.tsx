@@ -1,5 +1,6 @@
 import React from "react";
 import { CommentaryList } from "../commentary/CommentaryList";
+import Image from "next/image";
 
 export const Guide = ({ children }: { children?: React.ReactNode }) => {
   const mockList = [
@@ -77,11 +78,15 @@ export const Guide = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <div className="flex flex-col items-center px-8">
-      <img
-        alt="Commenta logo"
-        className="w-120 h-30 object-cover"
-        src="https://firebasestorage.googleapis.com/v0/b/commenta-b0743.firebasestorage.app/o/assets%2FCommenta_logo.png?alt=media&token=d6105a26-7777-493b-b053-74cbbf81cb4d"
-      />
+      <div className="relative w-120 h-30">
+        <Image
+          src="https://firebasestorage.googleapis.com/v0/b/commenta-b0743.firebasestorage.app/o/assets%2FCommenta_logo.png?alt=media&token=d6105a26-7777-493b-b053-74cbbf81cb4d"
+          alt="Commenta logo"
+          fill
+          style={{ objectFit: "cover" }}
+          priority
+        />
+      </div>
       <section>
         <h2 className="text-xl font-bold text-center text-gray-600">
           다양한 사람들과 코멘터리를 나눠보세요

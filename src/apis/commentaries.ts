@@ -21,6 +21,6 @@ export const getCommentaryList = async (
     return res.data || [];
   } catch (error) {
     console.error("Error fetching user data:", error);
-    return null;
+    return null || [];
   }
 };

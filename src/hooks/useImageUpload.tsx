@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/store/authStore";
+import { updateUserData } from "@/apis/userData";
 
 export function useImageUpload() {
   const { user } = useAuthStore();
   const [uploading, setUploading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const uploadImage = async (file: File): Promise<string | null> => {
@@ -33,9 +35,47 @@ export function useImageUpload() {
     }
   };
 
+  const deleteImageFromStorage = async (fileUrl: string): Promise<boolean> => {
+    if (!user || !fileUrl) return false;
+
+    try {
+      setDeleting(true);
+      setError(null);
+
+      // URL → Storage path 변환
+      const path = decodeURIComponent(fileUrl.split("/o/")[1].split("?")[0]);
+      const storageRef = ref(getStorage(), path);
+
+      await deleteObject(storageRef);
+
+      return true;
+    } catch (err: any) {
+      console.error("Failed to delete image:", err);
+      setError(err.message);
+      return false;
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const deleteProfileImage = async () => {
+    if (!user?.profileUrl) return;
+
+    const deleted = await deleteImageFromStorage(user.profileUrl);
+    if (!deleted) return;
+
+    // DB에서 프로필 이미지 제거
+    const res = await updateUserData(user.uid, { profileUrl: null });
+    if (res) {
+      console.log("Profile image removed successfully");
+    }
+  };
+
   return {
     uploadImage,
+    deleteProfileImage,
     uploading,
+    deleting,
     error,
   };
 }
