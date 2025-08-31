@@ -1,5 +1,4 @@
 import { Flame } from "lucide-react";
-import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
 import { SubscribeCategory, getSubscribeCategoryList } from "@/apis/subscribe";
@@ -11,7 +10,7 @@ export const SubscibeSection = () => {
   const { open, close } = useSimpleModal();
   const { user } = useAuthStore();
 
-  const { data: subscribeList = [], isLoading } = useQuery<SubscribeCategory[]>({
+  const { data: subscribeList = [] } = useQuery<SubscribeCategory[]>({
     queryKey: ["subscribeList", user?.uid],
     queryFn: () => (user?.uid ? getSubscribeCategoryList(user.uid) : Promise.resolve([])),
     enabled: !!user?.uid, // 로그인 한 경우에만 실행

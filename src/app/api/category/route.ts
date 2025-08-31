@@ -6,7 +6,7 @@ const normalizeForComparison = (str: string) => str.replace(/\s+/g, "").toLowerC
 
 export async function POST(req: Request) {
   try {
-    let { title, author } = await req.json();
+    const { title, author } = await req.json();
 
     if (!title || !author) {
       return NextResponse.json(

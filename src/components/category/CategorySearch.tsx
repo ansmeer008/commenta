@@ -83,7 +83,7 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
     author: "",
   });
 
-  const { mutate: mutateCategory, isPending } = useMutation({
+  const { mutate: mutateCategory } = useMutation({
     mutationFn: async () => {
       const { title, author } = values;
       return await addCategory({ title, author });

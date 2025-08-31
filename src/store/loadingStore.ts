@@ -7,7 +7,7 @@ interface LoadingState {
   reset: () => void;
 }
 
-export const useLoadingStore = create<LoadingState>((set, get) => ({
+export const useLoadingStore = create<LoadingState>(set => ({
   count: 0,
   startLoading: () => set(state => ({ count: state.count + 1 })),
   stopLoading: () => set(state => ({ count: Math.max(0, state.count - 1) })),
