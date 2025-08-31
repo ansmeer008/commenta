@@ -6,6 +6,12 @@
 
 ---
 
+## 🌐 Live Demo
+
+Check out the live project here: [https://commenta-hazel.vercel.app](https://commenta-hazel.vercel.app/)
+
+---
+
 ## 🙋 Author
 
 Jade (@ansmeer008)
@@ -22,7 +28,6 @@ Email: ansmeer008@gmail.com
 | **Language**         | [TypeScript](https://www.typescriptlang.org/)                                                                                                   |
 | **UI Components**    | [shadcn/ui](https://ui.shadcn.com/), [Radix UI](https://www.radix-ui.com/), [Lucide Icons](https://lucide.dev/)                                 |
 | **Styling**          | [Tailwind CSS 4](https://tailwindcss.com/), [clsx](https://github.com/lukeed/clsx), [tailwind-merge](https://github.com/dcastil/tailwind-merge) |
-| **Editor**           | [Tiptap](https://tiptap.dev/)                                                                                                                   |
 | **State Management** | [Zustand](https://zustand-demo.pmnd.rs/)                                                                                                        |
 | **Backend / DB**     | [Firebase](https://firebase.google.com/)                                                                                                        |
 | **Lint/Format**      | ESLint, Prettier                                                                                                                                |
@@ -30,21 +35,24 @@ Email: ansmeer008@gmail.com
 
 ---
 
-## 🚀 Getting Started
+## ✨ Features
 
-```bash
-# 패키지 설치
-yarn
+- Write and share commentaries on web content
+- Categorize and filter commentaries
+- Subscription-based episode filtering to prevent spoilers
+- User profiles with nickname and avatar
 
-# 개발 서버 실행
-yarn dev
+---
 
-# 빌드
-yarn build
+## 📁 Project Structure
 
-# 빌드 결과 실행
-yarn start
-
-# 코드 린트
-yarn lint
+```text
+├─ /app           # Next.js App Router pages
+├─ /components    # UI components +@
+├─ /hooks         # Custom hooks
+├─ /store         # Zustand global state
+├─ /lib           # Utility functions
+├─ /apis          # API handlers
+├─ /public        # Static assets
+└─ /styles        # Tailwind / global styles
 ```

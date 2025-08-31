@@ -46,6 +46,7 @@ export default function MyPage() {
         router.push("/");
       }
     } catch (error) {
+      console.error(error);
       toast.error("로그아웃에 실패했습니다.");
     } finally {
       stopLoading();
