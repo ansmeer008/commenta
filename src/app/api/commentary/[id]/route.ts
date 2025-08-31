@@ -4,7 +4,7 @@ import { Timestamp } from "firebase-admin/firestore";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id: commentaryId } = params;
+    const { id: commentaryId } = await params;
 
     if (!commentaryId) {
       return NextResponse.json(
@@ -74,7 +74,7 @@ export async function PATCH(req: NextRequest) {
     };
 
     if (content !== undefined) updatedData.content = content;
-    if (imgUrlList !== undefined) updatedData.imgUrl = imgUrlList;
+    if (imgUrlList !== undefined) updatedData.imgUrlList = imgUrlList;
     if (isSpoiler !== undefined) updatedData.isSpoiler = isSpoiler;
     if (episode !== undefined) updatedData.episode = episode;
 

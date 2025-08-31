@@ -10,7 +10,7 @@ export const LoginBanner = () => {
   if (isLoggedIn) return null;
   return (
     <div className="flex flex-col gap-4 justify-center items-center w-full py-4">
-      <Button className="w-3/6" onClick={() => openRouteModal("/login")}>
+      <Button type="button" className="w-3/6" onClick={() => openRouteModal("/login")}>
         로그인
       </Button>
     </div>

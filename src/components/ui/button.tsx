@@ -19,15 +19,19 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+      },
+      round: {
+        default: "",
+        full: "!rounded-full",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      round: "default",
     },
   }
 );
@@ -36,6 +40,7 @@ function Button({
   className,
   variant,
   size,
+  round,
   asChild = false,
   ...props
 }: React.ComponentProps<"button"> &
@@ -47,7 +52,7 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn("cursor-pointer", buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, round }), className, "cursor-pointer")}
       {...props}
     />
   );

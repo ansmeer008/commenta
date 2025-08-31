@@ -4,7 +4,7 @@ import { X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useLoadingStore } from "@/store/loadingStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Image } from "./image";
 
@@ -19,6 +19,14 @@ export function ImageBox({ images, onImagesChange, className, maxImages = 5 }: I
   const { uploadImage } = useImageUpload();
   const { startLoading, stopLoading } = useLoadingStore();
   const [previews, setPreviews] = useState<string[]>(images ?? []);
+  const [isInitialSetting, setIsInitialSetting] = useState(true);
+
+  useEffect(() => {
+    if (isInitialSetting && images?.length) {
+      setPreviews(images);
+      setIsInitialSetting(false);
+    }
+  }, [images, isInitialSetting]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

@@ -124,6 +124,7 @@ export function Profile({ onFileChange, className, profileUrl }: ProfileProps) {
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
+              type="button"
               variant="ghost"
               onClick={e => {
                 e.stopPropagation();

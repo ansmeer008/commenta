@@ -49,6 +49,7 @@ export function SimpleModalRenderer() {
           <DialogFooter className="gap-2">
             {buttonList.map(button => (
               <Button
+                type="button"
                 className="flex-1"
                 key={button.text}
                 variant={button.variation}

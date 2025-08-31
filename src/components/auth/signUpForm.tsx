@@ -92,7 +92,7 @@ export default function SignUpForm({ close }: { close?: () => void }) {
         />
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
 
-        <Button size="lg" onClick={handleSignUp}>
+        <Button type="button" size="lg" onClick={handleSignUp}>
           회원가입
         </Button>
       </div>

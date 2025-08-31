@@ -8,6 +8,7 @@ import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useRouteModal } from "@/hooks/useRouteModal";
+import { useLoadingStore } from "@/store/loadingStore";
 
 export default function LoginForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
@@ -17,9 +18,12 @@ export default function LoginForm({ close }: { close?: () => void }) {
   });
   const router = useRouter();
   const { openRouteModal } = useRouteModal();
+  const { startLoading, stopLoading } = useLoadingStore();
 
   const handleLogin = async () => {
     try {
+      startLoading();
+
       if (!values.email.length || !values.password.length) {
         return toast("check email or password");
       }
@@ -34,6 +38,8 @@ export default function LoginForm({ close }: { close?: () => void }) {
     } catch (error: any) {
       console.error("로그인 실패:", error);
       setErrorMsg("이메일 또는 비밀번호를 다시 확인해주세요.");
+    } finally {
+      stopLoading();
     }
   };
 
@@ -64,10 +70,10 @@ export default function LoginForm({ close }: { close?: () => void }) {
         />
 
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
-        <Button size="lg" onClick={handleLogin}>
+        <Button type="button" size="lg" onClick={handleLogin}>
           로그인
         </Button>
-        <Button size="lg" onClick={goSignUp}>
+        <Button type="button" size="lg" onClick={goSignUp}>
           회원 가입 하러 가기
         </Button>
       </div>

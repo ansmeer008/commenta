@@ -38,7 +38,7 @@ const Content = ({
       >
         <p>{content}</p>
         {imgUrlList && imgUrlList?.length > 0 && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-4">
             {imgUrlList.map(img => {
               return <Image key={img} url={img} />;
             })}
@@ -49,6 +49,7 @@ const Content = ({
       {!revealed && isSpoiler && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Button
+            type="button"
             size="sm"
             variant="ghost"
             onClick={e => {

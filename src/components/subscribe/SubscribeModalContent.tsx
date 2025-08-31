@@ -120,7 +120,7 @@ export const SubscribeModalContent = ({
           같은 작품을 읽고 있는 독자들의 코멘터리를 구독합니다.
         </p>
       </div>
-      <Button className="absolute right-0" variant="ghost" onClick={close}>
+      <Button type="button" className="absolute right-0" variant="ghost" onClick={close}>
         <XIcon />
       </Button>
       <div className="border-1 rounded-md p-4 flex flex-col gap-1 mb-6">
@@ -152,6 +152,7 @@ export const SubscribeModalContent = ({
       <div className="flex justify-end gap-4 mt-8">
         {subscribeData && (
           <Button
+            type="button"
             className="flex-1/2"
             variant="destructive"
             onClick={handleSubscriptionRemove}
@@ -160,7 +161,12 @@ export const SubscribeModalContent = ({
             삭제하기
           </Button>
         )}
-        <Button className="flex-1/2" onClick={() => mutateSubscribe()} disabled={isPending}>
+        <Button
+          type="button"
+          className="flex-1/2"
+          onClick={() => mutateSubscribe()}
+          disabled={isPending}
+        >
           {subscribeData ? "수정하기" : "등록하기"}
         </Button>
       </div>

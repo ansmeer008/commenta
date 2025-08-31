@@ -43,6 +43,7 @@ export const CategoryRecommender = () => {
           <div className="flex flex-wrap gap-2">
             {usageTop5.map(category => (
               <Badge
+                key={category.id}
                 className="cursor-pointer"
                 variant="default"
                 size="lg"
@@ -63,6 +64,7 @@ export const CategoryRecommender = () => {
           <div className="flex flex-wrap  gap-2">
             {subscribeTop5.map(category => (
               <Badge
+                key={category.id}
                 className="cursor-pointer"
                 variant="default"
                 size="lg"

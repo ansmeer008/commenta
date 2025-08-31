@@ -46,6 +46,7 @@ const SearchList = ({
             {selectHandler && (
               <div>
                 <Button
+                  type="button"
                   variant="ghost"
                   onClick={e => {
                     e.stopPropagation();
@@ -129,10 +130,12 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
         placeholder="작가명"
       />
       <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={close}>
+        <Button type="button" variant="secondary" onClick={close}>
           취소
         </Button>
-        <Button onClick={handleSave}>등록</Button>
+        <Button type="button" onClick={handleSave}>
+          등록
+        </Button>
       </div>
     </div>
   );
@@ -204,6 +207,7 @@ export const CategorySearch = ({
         )}
       </div>
       <Button
+        type="button"
         className="flex-1/5 md:flex-1/8"
         disabled={isFetching}
         onClick={async () => {

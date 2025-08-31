@@ -8,6 +8,8 @@ import AuthLayout from "../components/auth/AuthLayout";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 import { GlobalLoading } from "@/components/ui/loading";
+import { SendDevMailBtn } from "@/components/dev/SendDevMailBtn";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -31,17 +33,20 @@ export default function RootLayout({
     <html lang="ko" className={pretendard.className}>
       <body className="overflow-hidden h-screen">
         <Providers>
-          <div className="min-h-screen sm:px-6 lg:px-8 py-6 h-full flex flex-col">
-            <Navigation />
-            <div className="flex-1 overflow-y-auto scrollbar scrollbar-thumb-gray-100">
-              <AuthLayout>{children}</AuthLayout>
+          <TooltipProvider delayDuration={200}>
+            <div className="relative min-h-screen sm:px-6 lg:px-8 py-6 h-full flex flex-col">
+              <Navigation />
+              <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-gray-100">
+                <AuthLayout>{children}</AuthLayout>
+              </div>
+              <SendDevMailBtn className="absolute bottom-10 right-10" />
+              <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer>
             </div>
-            {/* <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer> */}
-          </div>
-          {modal}
-          <SimpleModalRenderer />
-          <Toaster position="top-center" />
-          <GlobalLoading />
+            {modal}
+            <SimpleModalRenderer />
+            <Toaster position="top-center" />
+            <GlobalLoading />
+          </TooltipProvider>
         </Providers>
       </body>
     </html>

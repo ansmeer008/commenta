@@ -12,6 +12,7 @@ import { Profile } from "@/components/ui/profile";
 import { updateUserData } from "@/apis/userData";
 import { toast } from "sonner";
 import { useLoadingStore } from "@/store/loadingStore";
+import { SendDevMailBtn } from "@/components/dev/SendDevMailBtn";
 
 export default function MyPage() {
   const queryClient = useQueryClient();
@@ -55,7 +56,7 @@ export default function MyPage() {
     <div className="min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <header className="mb-8 flex justify-between items-center">
         <h1 className="text-3xl font-bold">내정보</h1>
-        <Button size="sm" variant="secondary" onClick={handleLogout}>
+        <Button type="button" size="sm" variant="secondary" onClick={handleLogout}>
           로그아웃
         </Button>
       </header>

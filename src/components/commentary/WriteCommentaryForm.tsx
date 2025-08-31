@@ -106,16 +106,21 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
     if (!commentaryId) return;
 
     const initCommentaryData = async (id: string) => {
-      const commentaryData = await getCommentary(id);
-      if (commentaryData) {
-        setFieldValue("content", commentaryData.content);
-        setFieldValue("category", {
-          id: commentaryData.categoryId,
-          title: commentaryData.categoryTitle,
-        });
-        setFieldValue("isSpoiler", commentaryData.isSpoiler ?? false);
-        setFieldValue("episode", commentaryData.episode ?? 0);
-        setFieldValue("imgUrls", commentaryData.imgUrlList ?? []);
+      try {
+        startLoading();
+        const commentaryData = await getCommentary(id);
+        if (commentaryData) {
+          setFieldValue("content", commentaryData.content);
+          setFieldValue("category", {
+            id: commentaryData.categoryId,
+            title: commentaryData.categoryTitle,
+          });
+          setFieldValue("isSpoiler", commentaryData.isSpoiler ?? false);
+          setFieldValue("episode", commentaryData.episode ?? 0);
+          setFieldValue("imgUrls", commentaryData.imgUrlList ?? []);
+        }
+      } finally {
+        stopLoading();
       }
     };
 
@@ -198,7 +203,7 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
         <span className="text-xs">스포일러 안내 문구를 표시할 수 있습니다</span>
       </div>
       {errorCaption && <p className="text-xs font-bold text-red-500 my-2">{errorCaption}</p>}
-      <Button size="lg" onClick={handleSubmit} disabled={isPending}>
+      <Button type="button" size="lg" onClick={handleSubmit} disabled={isPending}>
         코멘터리 등록하기
       </Button>
     </div>
