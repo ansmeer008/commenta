@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
 import { Timestamp } from "firebase-admin/firestore";
 
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
+export async function GET(req: NextRequest, context: any) {
   try {
     const { id: commentaryId } = await context.params;
 

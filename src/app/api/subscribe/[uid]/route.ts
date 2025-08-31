@@ -3,7 +3,7 @@ import { adminDb } from "@/lib/admin";
 import { UserData } from "@/store/authStore";
 import { Timestamp } from "firebase-admin/firestore";
 
-export async function GET(req: NextRequest, context: { params: { uid: string } }) {
+export async function GET(req: NextRequest, context: any) {
   try {
     const { uid } = await context.params;
 
@@ -37,9 +37,9 @@ export async function GET(req: NextRequest, context: { params: { uid: string } }
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function POST(req: NextRequest, context: any) {
   try {
-    const { uid } = await params;
+    const { uid } = await context.params;
     const body = await req.json();
 
     const { id, episode } = body;
@@ -116,9 +116,9 @@ export async function POST(req: NextRequest, { params }: { params: { uid: string
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function PATCH(req: NextRequest, context: any) {
   try {
-    const { uid } = params;
+    const { uid } = await context.params;
     const body = await req.json();
     const { id, episode } = body;
 
@@ -170,9 +170,9 @@ export async function PATCH(req: NextRequest, { params }: { params: { uid: strin
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function DELETE(req: NextRequest, context: any) {
   try {
-    const { uid } = await params;
+    const { uid } = await context.params;
     const body = await req.json();
     const { id } = body;
 

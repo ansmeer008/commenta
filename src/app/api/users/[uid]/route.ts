@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
 
-export async function GET(req: NextRequest, context: { params: { uid: string } }) {
+export async function GET(req: NextRequest, context: any) {
   try {
     const { uid } = await context.params;
     const userDoc = await adminDb.collection("users").doc(uid).get();
@@ -19,9 +19,9 @@ export async function GET(req: NextRequest, context: { params: { uid: string } }
 
 const IMMUTABLE_FIELDS = ["id", "uid", "createdAt"];
 
-export async function PATCH(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function PATCH(req: NextRequest, context: any) {
   try {
-    const { uid } = await params;
+    const { uid } = await context.params;
     const body = await req.json();
 
     // 수정 불가 필드는 제거
