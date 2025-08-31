@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 export interface Category {
   id: string;
@@ -12,7 +12,7 @@ export interface Category {
 //작품 추가
 export const addCategory = async ({ title, author }: { title: string; author: string }) => {
   try {
-    const res = await axios.post("/api/category", { title, author });
+    const res = await apiClient.post("/category", { title, author });
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to add category");
@@ -29,7 +29,7 @@ export const addCategory = async ({ title, author }: { title: string; author: st
 //작품 검색
 export const searchCategoryList = async (search: string): Promise<Category[] | null> => {
   try {
-    const res = await axios.get("/api/category/search", {
+    const res = await apiClient.get("/category/search", {
       params: { q: search },
     });
     return res.data.categories;
@@ -44,7 +44,7 @@ export const getCategoriesByCount = async (
   limit: number = 5
 ): Promise<Category[] | null> => {
   try {
-    const res = await axios.get(`/api/category`, {
+    const res = await apiClient.get(`/category`, {
       params: { type, limit },
     });
 

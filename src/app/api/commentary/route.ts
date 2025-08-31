@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { verifyAuth } from "@/lib/server/auth";
 
 export async function POST(req: NextRequest) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
+
   try {
     const body = await req.json();
 
@@ -60,6 +64,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
   try {
     const searchParams = req.nextUrl.searchParams;
     const commentaryId = searchParams.get("id");

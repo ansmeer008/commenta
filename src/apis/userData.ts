@@ -1,12 +1,12 @@
 import { UserData, useAuthStore } from "@/store/authStore";
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 // 유저 데이터 조회
 export const fetchUserData = async (uid: string): Promise<UserData | null> => {
   const setUser = useAuthStore.getState().setUser;
 
   try {
-    const res = await axios.get(`/api/users/${uid}`);
+    const res = await apiClient.get(`/users/${uid}`);
 
     if (res.status !== 200 || !res.data) {
       console.warn(`User ${uid} not found`);
@@ -27,7 +27,7 @@ export const updateUserData = async (
 ): Promise<UserData | null> => {
   const setUser = useAuthStore.getState().setUser;
   try {
-    const res = await axios.patch(`/api/users/${uid}`, changeData);
+    const res = await apiClient.patch(`/users/${uid}`, changeData);
 
     if (res.status !== 200 || !res.data) {
       console.warn(`User ${uid} data update fail`);

@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 
 export interface Commentary {
   id: string;
@@ -17,7 +17,7 @@ export interface Commentary {
 
 export const getCommentary = async (commentaryId: string): Promise<Commentary | null> => {
   try {
-    const res = await axios.get(`/api/commentary/${commentaryId}`);
+    const res = await apiClient.get(`/commentary/${commentaryId}`);
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to get commentary");
@@ -35,7 +35,7 @@ export const createCommentary = async (
   body: Omit<Commentary, "id" | "createdAt" | "updatedAt" | "authorNickName" | "authorProfileUrl">
 ) => {
   try {
-    const res = await axios.post("/api/commentary", body);
+    const res = await apiClient.post("/commentary", body);
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to create commentary");
@@ -51,7 +51,7 @@ export const createCommentary = async (
 
 export const deleteCommentary = async (commentaryId: string) => {
   try {
-    const res = await axios.delete(`/api/commentary?id=${commentaryId}`);
+    const res = await apiClient.delete(`/commentary?id=${commentaryId}`);
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to delete commentary");
@@ -71,7 +71,7 @@ export const editCommentary = async (
   } & Partial<Omit<Commentary, "id">>
 ) => {
   try {
-    const res = await axios.patch(`/api/commentary/${body.id}`, body);
+    const res = await apiClient.patch(`/commentary/${body.id}`, body);
 
     if (res.status !== 200 && res.status !== 201) {
       console.warn("Failed to edit commentary");

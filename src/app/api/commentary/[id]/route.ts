@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
 import { Timestamp } from "firebase-admin/firestore";
+import { verifyAuth } from "@/lib/server/auth";
 
 export async function GET(req: NextRequest, context: any) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
   try {
     const { id: commentaryId } = await context.params;
 
@@ -54,6 +57,8 @@ export async function GET(req: NextRequest, context: any) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
   try {
     const body = await req.json();
     const { id, content, imgUrlList, isSpoiler, episode } = body;

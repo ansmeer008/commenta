@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 import { Category } from "./category";
 import { Subscribe } from "@/store/authStore";
 
@@ -6,7 +6,7 @@ export type SubscribeCategory = Subscribe & { detail: Category };
 
 export const getSubscribeCategoryList = async (uid: string): Promise<SubscribeCategory[]> => {
   try {
-    const { data } = await axios.get(`/api/subscribe/${uid}`);
+    const { data } = await apiClient.get(`/subscribe/${uid}`);
 
     return data.data || [];
   } catch (error) {
@@ -23,7 +23,7 @@ export const addSubscription = async (
   }
 ) => {
   try {
-    const res = await axios.post(`/api/subscribe/${uid}`, body);
+    const res = await apiClient.post(`/subscribe/${uid}`, body);
 
     return res;
   } catch (error) {
@@ -40,7 +40,7 @@ export const updateSubscription = async (
   }
 ) => {
   try {
-    const res = await axios.patch(`/api/subscribe/${uid}`, body);
+    const res = await apiClient.patch(`/subscribe/${uid}`, body);
 
     return res;
   } catch (error) {
@@ -51,7 +51,7 @@ export const updateSubscription = async (
 
 export const deleteSubscription = async (uid: string, id: string) => {
   try {
-    const res = await axios.delete(`/api/subscribe/${uid}`, { data: { id } });
+    const res = await apiClient.delete(`/subscribe/${uid}`, { data: { id } });
     return res;
   } catch (error) {
     console.error("Error delete subscribe:", error);

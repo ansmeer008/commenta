@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient from "@/lib/apiClient";
 import { Commentary } from "./commentary";
 import { Subscribe } from "@/store/authStore";
 
@@ -8,7 +8,7 @@ export const getCommentaryList = async (
   subscribes?: Subscribe[]
 ): Promise<Commentary[] | null> => {
   try {
-    const res = await axios.post(`/api/commentaries`, {
+    const res = await apiClient.post(`/commentaries`, {
       categoryIds,
       authorId,
       subscribes,

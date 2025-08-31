@@ -1,7 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
+import { verifyAuth } from "@/lib/server/auth";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
+
   try {
     const { searchParams } = new URL(req.url);
     const keyword = (searchParams.get("q") || "").trim();

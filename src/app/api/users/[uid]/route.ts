@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
+import { verifyAuth } from "@/lib/server/auth";
 
 export async function GET(req: NextRequest, context: any) {
+  const { uid, error } = await verifyAuth(req);
+  console.log(uid);
+  if (!uid) return error!;
   try {
     const { uid } = await context.params;
     const userDoc = await adminDb.collection("users").doc(uid).get();
@@ -20,6 +24,8 @@ export async function GET(req: NextRequest, context: any) {
 const IMMUTABLE_FIELDS = ["id", "uid", "createdAt"];
 
 export async function PATCH(req: NextRequest, context: any) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
   try {
     const { uid } = await context.params;
     const body = await req.json();

@@ -1,10 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Timestamp } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/admin";
+import { verifyAuth } from "@/lib/server/auth";
 
 const normalizeForComparison = (str: string) => str.replace(/\s+/g, "").toLowerCase();
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
+
   try {
     const { title, author } = await req.json();
 
@@ -66,7 +70,10 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
+  const { uid, error } = await verifyAuth(req);
+  if (!uid) return error!;
+
   try {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get("type") || "usage"; // "usage" | "subscribe"

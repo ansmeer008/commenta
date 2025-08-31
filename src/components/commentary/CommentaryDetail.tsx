@@ -39,7 +39,12 @@ export const CommentaryDetail = ({
     enabled: !!id,
   });
 
-  if (isLoading) return <Spinner />;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center p-8">
+        <Spinner />
+      </div>
+    );
   if (isError || !commentaryData) return <div>Error loading commentary</div>;
 
   return (
