@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { useLoadingStore } from "@/store/loadingStore";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function LoginForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
@@ -25,6 +27,8 @@ export default function LoginForm({ close }: { close?: () => void }) {
       if (!values.email.length || !values.password.length) {
         return toast("check email or password");
       }
+
+      await signInWithEmailAndPassword(auth, values.email, values.password);
 
       setErrorMsg("");
       if (close) {

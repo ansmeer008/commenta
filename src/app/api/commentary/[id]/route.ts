@@ -4,7 +4,7 @@ import { Timestamp } from "firebase-admin/firestore";
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id: commentaryId } = await params;
+    const commentaryId = params.id;
 
     if (!commentaryId) {
       return NextResponse.json(
