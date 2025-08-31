@@ -136,7 +136,7 @@ export const SubscribeModalContent = ({
       <div className="flex flex-col gap-1">
         <p className="text-sm font-bold">회차 지정(선택)</p>
         <p className="text-xs text-gray-500">
-          회차를 지정하면 현 회차 이후의 코멘터리들을 뮤트합니다.
+          스포일러 모드를 켜면 지정한 회차 이후의 코멘터리들을 뮤트합니다.
         </p>
         <NumberInput
           value={values.episode || 0}
@@ -146,7 +146,7 @@ export const SubscribeModalContent = ({
           min={0}
           max={99999}
           step={1}
-          placeholder="지정된 회차 없음"
+          placeholder="모두 노출"
         />
       </div>
       <div className="flex justify-end gap-4 mt-8">

@@ -10,15 +10,18 @@ import { cn } from "@/lib/utils";
 import { useForm } from "@/hooks/useForm";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLoadingStore } from "@/store/loadingStore";
+import { Spinner } from "../ui/spinner";
 
 const SearchList = ({
   list,
   selectHandler,
   selectBtnText,
+  isLoading,
 }: {
   list: Category[];
   selectHandler?: (select: Category) => void;
   selectBtnText?: string;
+  isLoading?: boolean;
 }) => {
   const { open, close } = useSimpleModal();
 
@@ -30,48 +33,61 @@ const SearchList = ({
       buttonList: [],
     });
   };
+
   return (
     <ul className="absolute bg-gray-100 z-10 left-0 right-0 rounded-b-md shadow-md">
-      {list.map((item: Category) => {
-        return (
-          <li key={item.id} className="p-2 flex justify-between border-b-1 border-gray-200">
-            <div>
-              <p>
-                {item.title}({item.author})
-              </p>
-              <p className="text-xs text-gray-500">
-                언급 {item.usageCount}회, 구독 {item.subscribeCount}회
-              </p>
-            </div>
-            {selectHandler && (
-              <div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={e => {
-                    e.stopPropagation();
-                    if (selectHandler) {
-                      selectHandler(item);
-                    }
-                  }}
-                  onMouseDown={e => e.preventDefault()}
-                >
-                  <span className="text-xs text-gray-700">{selectBtnText ?? "구독하기"}</span>
-                  <ListPlus size={20} />
-                </Button>
-              </div>
-            )}
-          </li>
-        );
-      })}
+      {isLoading ? (
+        <li className="flex items-center justify-center py-4">
+          <Spinner />
+        </li>
+      ) : (
+        <>
+          {list.length ? (
+            list.map((item: Category) => {
+              return (
+                <li key={item.id} className="p-2 flex justify-between border-b-1 border-gray-200">
+                  <div>
+                    <p>
+                      {item.title}({item.author})
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      언급 {item.usageCount}회, 구독 {item.subscribeCount}회
+                    </p>
+                  </div>
+                  {selectHandler && (
+                    <div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={e => {
+                          e.stopPropagation();
+                          if (selectHandler) {
+                            selectHandler(item);
+                          }
+                        }}
+                        onMouseDown={e => e.preventDefault()}
+                      >
+                        <span className="text-xs text-gray-700">{selectBtnText ?? "구독하기"}</span>
+                        <ListPlus size={20} />
+                      </Button>
+                    </div>
+                  )}
+                </li>
+              );
+            })
+          ) : (
+            <p className="text-md text-center text-gray-300 py-4">검색 결과가 없어요</p>
+          )}
 
-      <li
-        className="flex justify-center items-center gap-2 p-2 cursor-pointer bg-gray-50 rounded-b-lg"
-        onClick={handleCustomContent}
-      >
-        <Plus size={16} />
-        직접 입력하기
-      </li>
+          <li
+            className="flex justify-center items-center gap-2 p-2 cursor-pointer bg-gray-50 rounded-b-lg"
+            onClick={handleCustomContent}
+          >
+            <Plus size={16} />
+            직접 입력하기
+          </li>
+        </>
+      )}
     </ul>
   );
 };
@@ -203,6 +219,7 @@ export const CategorySearch = ({
                 setIsOpen(false);
               }
             }}
+            isLoading={isFetching}
           />
         )}
       </div>

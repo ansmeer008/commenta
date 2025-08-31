@@ -33,7 +33,7 @@ export async function fetchCommentaryList(
     commentaries = commentaries.filter(c => {
       if (c.episode == null) return true; // episode 없는 건 항상 통과
       const myEpisode = subMap.get(c.categoryId);
-      if (myEpisode == null) return false; // 혹시라도 구독 정보 없으면 배제
+      if (myEpisode == null) return true; //구독 정보 없으면 그냥 통과
       return c.episode <= myEpisode; // 스포일러 컷
     });
   }

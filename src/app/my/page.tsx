@@ -39,11 +39,16 @@ export default function MyPage() {
   });
 
   const handleLogout = async () => {
-    const success = await logout();
-    if (success) {
-      router.push("/");
-    } else {
-      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+    try {
+      startLoading();
+      const success = await logout();
+      if (success) {
+        router.push("/");
+      }
+    } catch (error) {
+      toast.error("로그아웃에 실패했습니다.");
+    } finally {
+      stopLoading();
     }
   };
 
