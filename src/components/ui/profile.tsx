@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useLoadingStore } from "@/store/loadingStore";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -15,7 +15,7 @@ import {
 } from "./dropdown-menu";
 import { Button } from "./button";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type ProfileProps = {
   profileUrl: string | null;

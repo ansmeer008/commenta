@@ -11,7 +11,6 @@ import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CategoryRecommender } from "@/components/category/CategoryRecommender";
-import { SendDevMailBtn } from "@/components/dev/SendDevMailBtn";
 
 export default function Commentaries() {
   const [filterList, setFilterList] = useState<Filter[]>([]);

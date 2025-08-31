@@ -12,7 +12,6 @@ import { Profile } from "@/components/ui/profile";
 import { updateUserData } from "@/apis/userData";
 import { toast } from "sonner";
 import { useLoadingStore } from "@/store/loadingStore";
-import { SendDevMailBtn } from "@/components/dev/SendDevMailBtn";
 
 export default function MyPage() {
   const queryClient = useQueryClient();
@@ -20,11 +19,7 @@ export default function MyPage() {
   const router = useRouter();
   const { startLoading, stopLoading } = useLoadingStore();
 
-  const {
-    data: commentaryList,
-    isFetching,
-    isError,
-  } = useQuery({
+  const { data: commentaryList, isFetching } = useQuery({
     queryKey: ["commentaryList", user?.uid],
     queryFn: () => getCommentaryList(undefined, user?.uid, user?.subscribes),
     enabled: !!user?.uid,

@@ -3,8 +3,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { useForm } from "@/hooks/useForm";
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useRouteModal } from "@/hooks/useRouteModal";
@@ -27,8 +25,6 @@ export default function LoginForm({ close }: { close?: () => void }) {
       if (!values.email.length || !values.password.length) {
         return toast("check email or password");
       }
-
-      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
 
       setErrorMsg("");
       if (close) {
