@@ -3,12 +3,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { auth } from "@/lib/firebase";
-import {
-  browserSessionPersistence,
-  onAuthStateChanged,
-  setPersistence,
-  signOut,
-} from "firebase/auth";
+import { browserSessionPersistence, onAuthStateChanged, setPersistence } from "firebase/auth";
 import { usePathname } from "next/navigation";
 import { fetchUserData } from "@/apis/userData";
 import { toast } from "sonner";
