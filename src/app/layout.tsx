@@ -34,12 +34,12 @@ export default function RootLayout({
       <body className="overflow-hidden h-screen">
         <Providers>
           <TooltipProvider delayDuration={200}>
-            <div className="relative min-h-screen sm:px-6 lg:px-8 py-6 h-full flex flex-col">
+            <div className="relative min-h-screen px-4 sm:px-6 lg:px-8 py-6 h-full mx-auto max-w-[1200px] flex flex-col pb-[env(safe-area-inset-bottom)]">
               <Navigation />
               <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-gray-100">
                 <AuthLayout>{children}</AuthLayout>
               </div>
-              <SendDevMailBtn className="absolute bottom-10 right-10" />
+              <SendDevMailBtn className="absolute bottom-[calc(4rem+env(safe-area-inset-bottom))] right-6 md:right-10" />
               <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer>
             </div>
             {modal}

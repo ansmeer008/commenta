@@ -57,15 +57,13 @@ export default function Commentaries() {
       <header className="flex justify-between mb-8">
         <h1 className="text-3xl font-bold">둘러보기</h1>
         <Button type="button" onClick={openCreateCommentaryModal}>
-          {" "}
           작성하기
         </Button>
       </header>
 
       <main>
         <div className="flex flex-col gap-8">
-          {!filterList.length && <CategoryRecommender />}
-
+          <CategoryRecommender />
           {filterList.length > 0 && (
             <CommentaryFilter filterList={filterList} onToggle={handleToggleFilter} />
           )}

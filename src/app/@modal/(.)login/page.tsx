@@ -22,10 +22,10 @@ export default function LoginModal() {
       <DialogOverlay>
         <DialogContent
           showCloseButton={false}
-          className="bg-white shadow-lg rounded-md w-full max-w-lg p-6 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+          className="bg-white shadow-lg rounded-md w-[80%] max-w-lg min-w-[16rem] p-6 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
         >
           <DialogHeader className="flex-row justify-between items-center">
-            <DialogTitle>로그인 모달</DialogTitle>
+            <DialogTitle>로그인</DialogTitle>
             <DialogClose asChild>
               <Button type="button" variant="ghost" onClick={closeWithRouterBack}>
                 X

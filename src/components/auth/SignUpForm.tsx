@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
@@ -12,9 +13,11 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { fetchUserData } from "@/apis/userData";
 import { useAuthStore } from "@/store/authStore";
+import { checkEmailFormat, checkPasswordFormat } from "@/utils/validation";
 
 export default function SignUpForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { values, setFieldValue } = useForm({
     email: "",
     password: "",
@@ -23,11 +26,20 @@ export default function SignUpForm({ close }: { close?: () => void }) {
   const router = useRouter();
 
   const handleSignUp = async () => {
-    try {
-      if (!values.email || !values.password || !values.nickname) {
-        return toast("모든 필드를 입력해주세요.");
-      }
+    if (!values.email || !values.password || !values.nickname) {
+      return setErrorMsg("모든 필드를 입력해주세요.");
+    }
 
+    if (!checkEmailFormat(values.email)) {
+      return setErrorMsg("이메일 형식에 맞게 입력해주세요.");
+    }
+
+    const { isValid, errors } = checkPasswordFormat(values.password);
+    if (!isValid) {
+      return setErrorMsg(errors[0]);
+    }
+
+    try {
       const { data } = await axios.post("/api/auth/signup", {
         email: values.email,
         password: values.password,
@@ -73,14 +85,21 @@ export default function SignUpForm({ close }: { close?: () => void }) {
           placeholder="example@email.com"
         />
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          value={values.password}
-          onChange={e => setFieldValue("password", e.target.value)}
-          placeholder="비밀번호를 입력하세요"
-        />
+        <div className="relative w-full">
+          <Input
+            type={showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={e => setFieldValue("password", e.target.value)}
+            placeholder="비밀번호를 입력하세요"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(prev => !prev)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
         <Label htmlFor="nickname">Nickname</Label>
         <Input
           id="nickname"

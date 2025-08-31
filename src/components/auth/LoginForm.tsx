@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { useLoadingStore } from "@/store/loadingStore";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { Eye, EyeOff } from "lucide-react";
 import { auth } from "@/lib/firebase";
 
 export default function LoginForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const { values, setFieldValue } = useForm({
     email: "",
     password: "",
@@ -60,14 +62,22 @@ export default function LoginForm({ close }: { close?: () => void }) {
           placeholder="example@email.com"
         />
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          value={values.password}
-          onChange={e => setFieldValue("password", e.target.value)}
-          placeholder="비밀번호를 입력해주세요"
-        />
+
+        <div className="relative w-full">
+          <Input
+            type={showPassword ? "text" : "password"}
+            value={values.password}
+            onChange={e => setFieldValue("password", e.target.value)}
+            placeholder="비밀번호를 입력해주세요"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(prev => !prev)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
         {errorMsg && <p className="text-xs text-red-500">{errorMsg}</p>}
         <Button type="button" size="lg" onClick={handleLogin}>
