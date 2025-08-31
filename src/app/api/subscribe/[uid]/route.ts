@@ -3,9 +3,9 @@ import { adminDb } from "@/lib/admin";
 import { UserData } from "@/store/authStore";
 import { Timestamp } from "firebase-admin/firestore";
 
-export async function GET(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function GET(req: NextRequest, context: { params: { uid: string } }) {
   try {
-    const { uid } = await params;
+    const { uid } = await context.params;
 
     const userDoc = await adminDb.collection("users").doc(uid).get();
 

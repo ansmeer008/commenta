@@ -105,7 +105,7 @@ export function NumberInput({
           onClick={increment}
           className="flex items-center justify-center border-l border-b border-gray-300 text-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <ChevronUp size="md" />
+          <ChevronUp size={24} />
         </button>
         <button
           type="button"
@@ -114,7 +114,7 @@ export function NumberInput({
           onClick={decrement}
           className="flex items-center justify-center border-l border-gray-300 text-xs hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          <ChevronDown size="md" />
+          <ChevronDown size={24} />
         </button>
       </div>
     </div>

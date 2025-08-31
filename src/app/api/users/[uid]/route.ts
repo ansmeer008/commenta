@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/admin";
 
-export async function GET(req: NextRequest, { params }: { params: { uid: string } }) {
+export async function GET(req: NextRequest, context: { params: { uid: string } }) {
   try {
-    const { uid } = await params;
+    const { uid } = await context.params;
     const userDoc = await adminDb.collection("users").doc(uid).get();
 
     if (!userDoc.exists) {
