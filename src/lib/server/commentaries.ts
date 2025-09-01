@@ -31,9 +31,8 @@ export async function fetchCommentaryList(
   if (subscribes?.length) {
     const subMap = new Map(subscribes.map(s => [s.id, s.episode]));
     commentaries = commentaries.filter(c => {
-      if (c.episode == null) return true; // episode 없는 건 항상 통과
       const myEpisode = subMap.get(c.categoryId);
-      if (myEpisode == null) return true; //구독 정보 없으면 그냥 통과
+      if (myEpisode == null || myEpisode === 0) return true; //구독 정보 없으면 그냥 통과
       return c.episode <= myEpisode; // 스포일러 컷
     });
   }

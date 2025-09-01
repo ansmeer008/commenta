@@ -17,6 +17,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoadingStore } from "@/store/loadingStore";
 import { useState } from "react";
 import { useAuthStore } from "@/store/authStore";
+import { formatRelativeTime } from "@/utils/time";
 
 const Content = ({
   content,
@@ -74,6 +75,7 @@ export const CommentaryItem = ({
   authorProfileUrl,
   categoryTitle,
   episode,
+  createdAt,
 
   className,
   isSpoiler,
@@ -152,7 +154,7 @@ export const CommentaryItem = ({
                 </AvatarFallback>
               </Avatar>
               <span className="font-bold">{authorNickName}</span>
-              <span className="text-xs text-gray-500">3분전</span>
+              <span className="text-xs text-gray-500">{formatRelativeTime(createdAt)}</span>
             </div>
             {isAuthor && (
               <DropdownMenu modal={false}>

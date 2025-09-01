@@ -17,6 +17,7 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
+import { formatRelativeTime } from "@/utils/time";
 
 export const CommentaryDetail = ({
   id,
@@ -72,7 +73,9 @@ export const CommentaryDetail = ({
             <AvatarFallback></AvatarFallback>
           </Avatar>
           <span className="font-bold">{commentaryData.authorNickName}</span>
-          <span className="text-xs text-gray-500">3분전</span>
+          <span className="text-xs text-gray-500">
+            {formatRelativeTime(commentaryData.createdAt)}
+          </span>
           {close && (
             <Button onClick={close} className="absolute right-10" variant="ghost">
               <XIcon />

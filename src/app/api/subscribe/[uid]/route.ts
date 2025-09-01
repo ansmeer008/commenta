@@ -129,7 +129,7 @@ export async function PATCH(req: NextRequest, context: any) {
     const body = await req.json();
     const { id, episode } = body;
 
-    if (!id || episode === undefined) {
+    if (!id) {
       return NextResponse.json(
         { success: false, error: "Missing required fields" },
         { status: 400 }
