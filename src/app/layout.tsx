@@ -36,7 +36,7 @@ export default function RootLayout({
           <TooltipProvider delayDuration={200}>
             <div className="relative min-h-screen px-4 sm:px-6 lg:px-8 py-6 h-full mx-auto max-w-[1200px] flex flex-col pb-[env(safe-area-inset-bottom)]">
               <Navigation />
-              <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-gray-100">
+              <div className="overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-gray-100">
                 <AuthLayout>{children}</AuthLayout>
               </div>
               <SendDevMailBtn className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] right-6 md:right-10" />

@@ -94,9 +94,8 @@ export const Guide = ({ children }: { children?: React.ReactNode }) => {
         {children}
 
         <p className="text-xs text-gray-500 pt-4 text-center">*아래 코멘터리들은 예시입니다</p>
-        <div className="border-2 mt-4 rounded-4xl h-120 overflow-hidden">
+        <div className="border-2 mt-4 rounded-4xl h-100 overflow-hidden">
           <div className="h-full px-10">
-            {/* 롤링 영역 */}
             <div className="flex flex-col animate-[scroll-up_20s_linear_infinite]">
               <CommentaryList commentaryList={mockList} isClickable={false} />
               <CommentaryList commentaryList={mockList} isClickable={false} />
