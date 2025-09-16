@@ -5,8 +5,6 @@ import { Commentary } from "@/apis/commentary";
 import { SubscribeCategory, getSubscribeCategoryList } from "@/apis/subscribe";
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { CommentaryFilter, Filter } from "@/components/commentary/CommentaryFilter";
-import { Button } from "@/components/ui/button";
-import { useRouteModal } from "@/hooks/useRouteModal";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
