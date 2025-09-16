@@ -74,7 +74,7 @@ export const CategoryRecommender = () => {
               <span> 가장 많이 구독한 코멘터리 Top 5</span>
             </div>
             <Button variant="ghost" onClick={() => setIsOpenSubSection(prev => !prev)}>
-              {isOpenUsageSection ? <ChevronDown /> : <ChevronUp />}
+              {isOpenSubSection ? <ChevronDown /> : <ChevronUp />}
             </Button>
           </div>
           {isOpenSubSection && (

@@ -14,12 +14,7 @@ import { CategoryRecommender } from "@/components/category/CategoryRecommender";
 
 export default function Commentaries() {
   const [filterList, setFilterList] = useState<Filter[]>([]);
-  const { openRouteModal } = useRouteModal();
   const { user } = useAuthStore();
-
-  const openCreateCommentaryModal = () => {
-    openRouteModal("/commentary/create");
-  };
 
   const { data: subscribeList = [] } = useQuery<SubscribeCategory[]>({
     queryKey: ["subscribeList", user?.uid],
@@ -54,11 +49,8 @@ export default function Commentaries() {
 
   return (
     <div className="min-h-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <header className="flex justify-between mb-8">
+      <header className="flex justify-start mb-8">
         <h1 className="text-3xl font-bold">둘러보기</h1>
-        <Button type="button" onClick={openCreateCommentaryModal}>
-          작성하기
-        </Button>
       </header>
 
       <main>

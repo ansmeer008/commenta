@@ -50,7 +50,11 @@ export const NoSpoilerModeSection = () => {
           disabled={isPending}
         />
       </div>
-      <p className="text-xs text-gray-300">지정한 회차 이상의 코멘터리는 노출되지 않습니다</p>
+      <p className="text-xs text-gray-500">
+        {isNoSpoilerMode
+          ? "지정한 회차 이상의 코멘터리는 노출되지 않습니다"
+          : "지정한 회차와 상관없이 모든 회차 코멘터리가 노출됩니다"}
+      </p>
     </div>
   );
 };

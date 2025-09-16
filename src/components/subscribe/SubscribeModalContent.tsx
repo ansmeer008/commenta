@@ -65,9 +65,12 @@ export const SubscribeModalContent = ({
       close();
     },
     onError: (error: any) => {
-      const defaultMessge = subscribeData ? "구독 수정 실패" : "구독 등록 실패";
-      const errorMessge = error.message || defaultMessge;
-      toast(errorMessge);
+      const errorMsg = error.response.data.error;
+      let message = subscribeData ? "구독 수정 실패" : "구독 등록 실패";
+      if (errorMsg === "Already Subscribed") {
+        message = "이미 구독한 작품입니다";
+      }
+      toast.error(message);
     },
   });
 

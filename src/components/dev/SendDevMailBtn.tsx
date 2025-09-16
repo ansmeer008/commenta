@@ -1,12 +1,14 @@
 "use client";
 import { Button } from "../ui/button";
-import { Mail } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { useRouteModal } from "@/hooks/useRouteModal";
 
 export const SendDevMailBtn = ({ className }: { className?: string }) => {
-  const openSendMail = () => {
-    window.location.href =
-      "mailto:ansmeer008@gmail.com?subject=[Commenta]문의드립니다&body=문의 내용을 입력하세요.";
+  const { openRouteModal } = useRouteModal();
+
+  const openCreateCommentaryModal = () => {
+    openRouteModal("/commentary/create");
   };
 
   return (
@@ -17,14 +19,14 @@ export const SendDevMailBtn = ({ className }: { className?: string }) => {
             type="button"
             round="full"
             variant="default"
-            onClick={openSendMail}
+            onClick={openCreateCommentaryModal}
             className="p-4 h-auto"
           >
-            <Mail width={24} height={24} />
+            <Pencil width={24} height={24} />
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>개발자에게 메일 보내기</p>
+          <p>코멘터리 작성하기</p>
         </TooltipContent>
       </Tooltip>
     </div>

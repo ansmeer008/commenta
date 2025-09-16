@@ -38,7 +38,7 @@ export const Navigation = () => {
   return (
     <>
       {isLoggedIn && (
-        <>
+        <div className="sticky top-0 bg-white z-1">
           <CategorySearch className={"w-full px-8 py-2"} selectHandler={handleSubscribe} />
           <NavigationMenu className="flex w-full bg-white">
             <ul className="flex justify-between w-full border-b-2 border-b-gray-100">
@@ -66,7 +66,7 @@ export const Navigation = () => {
               })}
             </ul>
           </NavigationMenu>
-        </>
+        </div>
       )}
     </>
   );

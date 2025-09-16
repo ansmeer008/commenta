@@ -28,7 +28,7 @@ export const addSubscription = async (
     return res;
   } catch (error) {
     console.error("Error add subscribe:", error);
-    return null;
+    throw error;
   }
 };
 

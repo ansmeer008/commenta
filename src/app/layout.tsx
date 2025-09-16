@@ -40,7 +40,7 @@ export default function RootLayout({
                 <AuthLayout>{children}</AuthLayout>
               </div>
               <SendDevMailBtn className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] right-6 md:right-10" />
-              <footer className="mt-2 text-center text-sm text-gray-500">© Commenta</footer>
+              <footer className="mt-2 mb-8 text-center text-sm text-gray-500">© Commenta</footer>
             </div>
             {modal}
             <SimpleModalRenderer />

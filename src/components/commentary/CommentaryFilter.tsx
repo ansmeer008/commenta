@@ -13,7 +13,7 @@ interface CommentaryFilterProps {
 
 export const CommentaryFilter = ({ filterList, onToggle }: CommentaryFilterProps) => {
   return (
-    <div className="flex overflow-x-auto gap-2 pb-4">
+    <div className="flex overflow-x-auto gap-2 pb-4 px-4">
       <Badge
         size="lg"
         variant={filterList.every(f => f.isSelected) ? "highlight" : "outline"}
