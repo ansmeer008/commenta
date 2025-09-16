@@ -77,7 +77,7 @@ export const Guide = ({ children }: { children?: React.ReactNode }) => {
   ];
 
   return (
-    <div className="flex flex-col items-center px-8">
+    <div className="flex flex-col items-center px-8 pb-8">
       <div className="relative w-120 h-30">
         <Image
           src="https://firebasestorage.googleapis.com/v0/b/commenta-b0743.firebasestorage.app/o/assets%2FCommenta_logo.png?alt=media&token=d6105a26-7777-493b-b053-74cbbf81cb4d"
