@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { useRouteModal } from "@/hooks/useRouteModal";
 
-export const SendDevMailBtn = ({ className }: { className?: string }) => {
+export const WriteCommentaryBtn = ({ className }: { className?: string }) => {
   const { openRouteModal } = useRouteModal();
 
   const openCreateCommentaryModal = () => {

@@ -8,8 +8,8 @@ import AuthLayout from "../components/auth/AuthLayout";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./providers";
 import { GlobalLoading } from "@/components/ui/loading";
-import { SendDevMailBtn } from "@/components/dev/SendDevMailBtn";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Footer } from "@/components/guide/Footer";
 
 export const metadata: Metadata = {
   title: "Commenta",
@@ -39,8 +39,7 @@ export default function RootLayout({
               <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-gray-100">
                 <AuthLayout>{children}</AuthLayout>
               </div>
-              <SendDevMailBtn className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] right-6 md:right-10" />
-              <footer className="mt-2 mb-8 text-center text-sm text-gray-500">© Commenta</footer>
+              <Footer />
             </div>
             {modal}
             <SimpleModalRenderer />
