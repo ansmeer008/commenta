@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { fetchCommentaryList } from "@/lib/server/commentaries";
 import { verifyAuth } from "@/lib/server/auth";
