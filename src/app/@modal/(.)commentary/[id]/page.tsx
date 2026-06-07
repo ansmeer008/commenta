@@ -5,10 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { usePathname } from "next/navigation";
-import { use } from "react";
 
 export default function CommentaryDetailModal(props: { params: Promise<{ id: string }> }) {
-  const { id } = use(props.params);
   const { isOpen, modalId, closeWithRouterBack } = useRouteModal();
   const pathName = usePathname();
 
@@ -23,7 +21,7 @@ export default function CommentaryDetailModal(props: { params: Promise<{ id: str
             <DialogTitle></DialogTitle>
           </DialogHeader>
         </VisuallyHidden>
-        <CommentaryDetail id={id} isModal={true} close={closeWithRouterBack} />
+        <CommentaryDetail paramsPromise={props.params} isModal={true} close={closeWithRouterBack} />
       </DialogContent>
     </Dialog>
   );

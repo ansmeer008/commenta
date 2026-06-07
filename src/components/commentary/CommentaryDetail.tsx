@@ -19,18 +19,20 @@ import {
 import { Card, CardContent } from "../ui/card";
 import { formatRelativeTime } from "@/utils/time";
 import { useAuthStore } from "@/store/authStore";
+import { use } from "react";
 
 export const CommentaryDetail = ({
-  id,
+  paramsPromise,
   isModal,
   close,
 }: {
-  id: string;
+  paramsPromise: Promise<{ id: string }>;
   isModal?: boolean;
   close?: () => void;
 }) => {
   const router = useRouter();
   const { isLoggedIn } = useAuthStore();
+  const { id } = use(paramsPromise);
 
   const {
     data: commentaryData,
