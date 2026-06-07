@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useImageUpload } from "@/hooks/useImageUpload";
 import { useLoadingStore } from "@/store/loadingStore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Image } from "./image";
 
@@ -18,21 +18,14 @@ type ImgBoxProps = {
 export function ImageBox({ images, onImagesChange, className, maxImages = 5 }: ImgBoxProps) {
   const { uploadImage } = useImageUpload();
   const { startLoading, stopLoading } = useLoadingStore();
-  const [previews, setPreviews] = useState<string[]>(images ?? []);
-  const [isInitialSetting, setIsInitialSetting] = useState(true);
-
-  useEffect(() => {
-    if (isInitialSetting && images?.length) {
-      setPreviews(images);
-      setIsInitialSetting(false);
-    }
-  }, [images, isInitialSetting]);
+  const [previews, setPreviews] = useState<string[] | null>(null);
+  const currentPreviews = previews ?? images ?? [];
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (previews.length >= maxImages) {
+    if (currentPreviews.length >= maxImages) {
       toast.error(`최대 ${maxImages}개까지 업로드 가능합니다.`);
       return;
     }
@@ -53,7 +46,7 @@ export function ImageBox({ images, onImagesChange, className, maxImages = 5 }: I
       startLoading();
       const url = await uploadImage(file);
       if (url) {
-        const updated = [...previews, url];
+        const updated = [...currentPreviews, url];
         setPreviews(updated);
         onImagesChange(updated);
       }
@@ -66,7 +59,7 @@ export function ImageBox({ images, onImagesChange, className, maxImages = 5 }: I
   };
 
   const handleRemove = (index: number) => {
-    const updated = previews.filter((_, i) => i !== index);
+    const updated = currentPreviews.filter((_, i) => i !== index);
     setPreviews(updated);
     onImagesChange(updated);
   };
@@ -74,11 +67,11 @@ export function ImageBox({ images, onImagesChange, className, maxImages = 5 }: I
   return (
     <div className={cn("flex items-end justify-between", className)}>
       <div className="flex gap-2 flex-wrap">
-        {previews.map((url, idx) => (
+        {currentPreviews.map((url, idx) => (
           <Image key={url} url={url} removeHandler={() => handleRemove(idx)} />
         ))}
 
-        {previews.length < maxImages && (
+        {currentPreviews.length < maxImages && (
           <label className="w-24 h-24 rounded-lg border border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400">
             <input
               type="file"
@@ -94,7 +87,7 @@ export function ImageBox({ images, onImagesChange, className, maxImages = 5 }: I
       </div>
       {maxImages && (
         <span className="text-xs text-gray-400">
-          {previews.length}/{maxImages}
+          {currentPreviews.length}/{maxImages}
         </span>
       )}
     </div>

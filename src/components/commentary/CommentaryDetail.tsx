@@ -91,7 +91,7 @@ export const CommentaryDetail = ({
         {commentaryData.imgUrlList && commentaryData.imgUrlList?.length > 0 && (
           <Carousel>
             <CarouselContent>
-              {commentaryData.imgUrlList.map(img => (
+              {commentaryData.imgUrlList.map((img: string) => (
                 <CarouselItem key={img} className="w-full h-[300px] md:h-[400px]">
                   <Card className="w-full h-full p-0">
                     <CardContent className="p-0 w-full h-full">
