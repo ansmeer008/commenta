@@ -6,15 +6,15 @@ import { SubscribeCategory, getSubscribeCategoryList } from "@/apis/subscribe";
 import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { CommentaryFilter, Filter } from "@/components/commentary/CommentaryFilter";
 import { useAuthStore } from "@/store/authStore";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CategoryRecommender } from "@/components/category/CategoryRecommender";
 
 export default function Commentaries() {
-  const [filterList, setFilterList] = useState<Filter[]>([]);
+  const [unselectedFilterIds, setUnselectedFilterIds] = useState<Set<string>>(() => new Set());
   const { user } = useAuthStore();
 
-  const { data: subscribeList = [] } = useQuery<SubscribeCategory[]>({
+  const { data: subscribeList = [] } = useQuery({
     queryKey: ["subscribeList", user?.uid],
     queryFn: () => getSubscribeCategoryList(user!.uid),
     enabled: !!user?.uid,
@@ -22,21 +22,31 @@ export default function Commentaries() {
 
   const handleToggleFilter = (id: string) => {
     if (id === "all") {
-      setFilterList(prev => prev.map(f => ({ ...f, isSelected: true })));
+      setUnselectedFilterIds(new Set());
     } else {
-      setFilterList(prev => prev.map(f => (f.id === id ? { ...f, isSelected: !f.isSelected } : f)));
+      setUnselectedFilterIds(prev => {
+        const next = new Set(prev);
+
+        if (next.has(id)) {
+          next.delete(id);
+        } else {
+          next.add(id);
+        }
+
+        return next;
+      });
     }
   };
-  useEffect(() => {
-    if (subscribeList && subscribeList.length > 0) {
-      const filters = subscribeList.map(item => ({
-        isSelected: true,
+
+  const filterList = useMemo<Filter[]>(
+    () =>
+      subscribeList.map((item: SubscribeCategory) => ({
         title: item.detail.title,
         id: item.detail.id,
-      }));
-      setFilterList(filters);
-    }
-  }, [subscribeList]);
+        isSelected: !unselectedFilterIds.has(item.detail.id),
+      })),
+    [subscribeList, unselectedFilterIds]
+  );
 
   const filterIds = filterList.filter(item => item.isSelected).map(filter => filter.id);
   const { data: commentaryList = [], isFetching } = useQuery<Commentary[] | null>({

@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === "development";
     return [
@@ -19,8 +20,13 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["firebasestorage.googleapis.com"], // 외부 이미지 허용 도메인
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+    ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

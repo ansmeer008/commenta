@@ -1,8 +1,15 @@
 # Commenta
 
-**Write your own commentaries for web contents and share it!**  
+**Write your own commentaries for web contents without spolier and share it!**  
 웹 콘텐츠를 보며 나만의 감상이나 코멘트를 작성하고, 이를 공유할 수 있는 플랫폼입니다.
-(2025년 8월까지 진행하는 단기 프로젝트입니다.)
+회차별 스포일러 방지 기능이 있어, 같은 회차를 공유하고 있는 사람들의 코멘트만 필터링 되어 보여집니다.
+
+---
+
+## 🔥 Work Plan
+
+- 1차 진행 : ~2025년 8월
+- 2차 진행 (개선작업) : ~2026년 7월
 
 ---
 

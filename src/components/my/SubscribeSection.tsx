@@ -45,7 +45,7 @@ export const SubscibeSection = () => {
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
-        {subscribeList.map(subscribe => {
+        {subscribeList.map((subscribe: SubscribeCategory) => {
           const isHot = subscribe.detail.usageCount > 10 || subscribe.detail.subscribeCount > 10;
           return (
             <Badge

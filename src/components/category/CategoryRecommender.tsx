@@ -51,7 +51,7 @@ export const CategoryRecommender = () => {
           </div>
           {isOpenUsageSection && (
             <div className="flex flex-wrap gap-2 mt-2 px-2 pb-4">
-              {usageTop5.map(category => (
+              {usageTop5.map((category: Category) => (
                 <Badge
                   key={category.id}
                   className="cursor-pointer"
@@ -79,7 +79,7 @@ export const CategoryRecommender = () => {
           </div>
           {isOpenSubSection && (
             <div className="flex flex-wrap gap-2 mt-2 px-2 pb-4">
-              {subscribeTop5.map(category => (
+              {subscribeTop5.map((category: Category) => (
                 <Badge
                   key={category.id}
                   className="cursor-pointer"
