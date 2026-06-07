@@ -1,83 +1,23 @@
-"use client";
-
-import { CommentaryList } from "@/components/commentary/CommentaryList";
 import { NoSpoilerModeSection } from "@/components/my/NoSpoilerModeSection";
 import { SubscibeSection } from "@/components/my/SubscribeSection";
-import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
-import { getCommentaryList } from "@/apis/commentaries";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Profile } from "@/components/ui/profile";
-import { updateUserData } from "@/apis/userData";
-import { toast } from "sonner";
-import { useLoadingStore } from "@/store/loadingStore";
+import { MyCommentariesSection } from "@/components/my/MyCommentariesSection";
+import { UserProfileSection } from "@/components/my/UserProfileSection";
+import { LogoutButton } from "@/components/my/LogoutButton";
 
 export default function MyPage() {
-  const queryClient = useQueryClient();
-  const { user, logout } = useAuthStore();
-  const router = useRouter();
-  const { startLoading, stopLoading } = useLoadingStore();
-
-  const { data: commentaryList, isFetching } = useQuery({
-    queryKey: ["commentaryList", user?.uid],
-    queryFn: () => getCommentaryList(undefined, user?.uid, user?.subscribes),
-    enabled: !!user?.uid,
-  });
-
-  const { mutate: updateUserProfile } = useMutation({
-    mutationFn: async (url: string | null) => await updateUserData(user!.uid, { profileUrl: url }),
-    onMutate: () => startLoading(),
-    onSettled: () => stopLoading(),
-    onSuccess: () => {
-      toast.success("프로필이 업데이트되었습니다!");
-      queryClient.invalidateQueries({ queryKey: ["commentaryList"] });
-    },
-    onError: () => {
-      toast.error("프로필 업데이트에 실패했습니다.");
-    },
-  });
-
-  const handleLogout = async () => {
-    try {
-      startLoading();
-      const success = await logout();
-      if (success) {
-        router.push("/");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("로그아웃에 실패했습니다.");
-    } finally {
-      stopLoading();
-    }
-  };
-
   return (
     <div className="min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <header className="mb-8 flex justify-between items-center">
         <h1 className="text-3xl font-bold">내정보</h1>
-        <Button type="button" size="sm" variant="secondary" onClick={handleLogout}>
-          로그아웃
-        </Button>
+        <LogoutButton />
       </header>
-
       <main className="flex flex-col gap-6">
-        <div className="flex items-center gap-4">
-          <Profile profileUrl={user?.profileUrl || null} onFileChange={updateUserProfile} />
-          <div className="flex flex-col">
-            <span className="font-bold text-lg">{user?.nickname}</span>
-            <span className="text-base text-gray-500">{user?.email}</span>
-          </div>
-        </div>
+        <UserProfileSection />
         <div className="flex flex-col gap-4 md:flex-row">
           <NoSpoilerModeSection />
           <SubscibeSection />
         </div>
-        <div className="flex flex-col gap-2 rounded-lg">
-          <p className="text-lg font-bold">내가 쓴 코멘터리</p>
-          <CommentaryList commentaryList={commentaryList || []} isLoading={isFetching} />
-        </div>
+        <MyCommentariesSection />
       </main>
     </div>
   );

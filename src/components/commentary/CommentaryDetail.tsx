@@ -18,6 +18,7 @@ import {
 } from "../ui/carousel";
 import { Card, CardContent } from "../ui/card";
 import { formatRelativeTime } from "@/utils/time";
+import { useAuthStore } from "@/store/authStore";
 
 export const CommentaryDetail = ({
   id,
@@ -29,6 +30,7 @@ export const CommentaryDetail = ({
   close?: () => void;
 }) => {
   const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
 
   const {
     data: commentaryData,
@@ -37,16 +39,16 @@ export const CommentaryDetail = ({
   } = useQuery<Commentary | null>({
     queryKey: ["commentary", id],
     queryFn: async () => await getCommentary(id),
-    enabled: !!id,
+    enabled: !!id && isLoggedIn !== null,
   });
 
-  if (isLoading)
+  if (isLoading || !commentaryData)
     return (
       <div className="flex justify-center items-center p-8">
         <Spinner />
       </div>
     );
-  if (isError || !commentaryData) return <div>Error loading commentary</div>;
+  if (isError) return <div>Error loading commentary</div>;
 
   return (
     <div className="flex flex-col gap-8">

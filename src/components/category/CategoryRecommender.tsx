@@ -46,7 +46,7 @@ export const CategoryRecommender = () => {
               <span>가장 많이 쓰인 코멘터리 Top 5</span>
             </div>
             <Button variant="ghost" onClick={() => setIsOpenUsageSection(prev => !prev)}>
-              {isOpenUsageSection ? <ChevronDown /> : <ChevronUp />}
+              {isOpenUsageSection ? <ChevronUp /> : <ChevronDown />}
             </Button>
           </div>
           {isOpenUsageSection && (
@@ -74,7 +74,7 @@ export const CategoryRecommender = () => {
               <span> 가장 많이 구독한 코멘터리 Top 5</span>
             </div>
             <Button variant="ghost" onClick={() => setIsOpenSubSection(prev => !prev)}>
-              {isOpenSubSection ? <ChevronDown /> : <ChevronUp />}
+              {isOpenSubSection ? <ChevronUp /> : <ChevronDown />}
             </Button>
           </div>
           {isOpenSubSection && (
