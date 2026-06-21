@@ -17,6 +17,7 @@ import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLoadingStore } from "@/store/loadingStore";
 import { ImageBox } from "../ui/imageBox";
+import { useRouter } from "next/navigation";
 
 interface CommentaryFormState {
   content: string;
@@ -26,10 +27,11 @@ interface CommentaryFormState {
   imgUrls: string[];
 }
 
-export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
+export const WriteCommentaryForm = ({ close }: { close?: () => void }) => {
   const params = useParams();
   const commentaryId = params?.id as string;
 
+  const router = useRouter();
   const { startLoading, stopLoading } = useLoadingStore();
   const { user } = useAuthStore();
   const [errorCaption, setErrorCaption] = useState<string | null>(null);
@@ -62,7 +64,12 @@ export const WriteCommentaryForm = ({ close }: { close: () => void }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["commentaryList"] });
       toast(commentaryId ? "코멘터리가 수정되었습니다!" : "코멘터리가 등록되었습니다!");
-      close();
+
+      if (close) {
+        close();
+      } else {
+        router.back();
+      }
     },
     onError: () => {
       toast(commentaryId ? "코멘터리 수정에 실패했습니다." : "코멘터리 등록에 실패했습니다.");

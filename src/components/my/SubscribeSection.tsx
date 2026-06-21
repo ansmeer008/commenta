@@ -1,3 +1,4 @@
+"use client";
 import { Flame } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useSimpleModal } from "@/hooks/useSimpleModal";

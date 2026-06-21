@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Switch } from "../ui/switch";
 import { useAuthStore } from "@/store/authStore";
