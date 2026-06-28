@@ -4,10 +4,10 @@ import { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "@/store/authStore";
-import { updateUserData } from "@/apis/userData";
+import { updateUserProfile } from "@/actions/user";
 
 export function useImageUpload() {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,11 +64,8 @@ export function useImageUpload() {
     const deleted = await deleteImageFromStorage(user.profileUrl);
     if (!deleted) return;
 
-    // DB에서 프로필 이미지 제거
-    const res = await updateUserData(user.uid, { profileUrl: null });
-    if (res) {
-      console.log("Profile image removed successfully");
-    }
+    await updateUserProfile(user.uid, { profileUrl: null });
+    if (user) setUser({ ...user, profileUrl: null });
   };
 
   return {

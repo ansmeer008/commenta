@@ -3,14 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { CommentaryList } from "../commentary/CommentaryList";
 import { useAuthStore } from "@/store/authStore";
-import { getCommentaryList } from "@/apis/commentaries";
+import { getMyCommentaries } from "@/actions/commentary";
 
 export const MyCommentariesSection = () => {
   const { user, logout } = useAuthStore();
 
   const { data: commentaryList, isFetching } = useQuery({
     queryKey: ["commentaryList", user?.uid],
-    queryFn: () => getCommentaryList(undefined, user?.uid, user?.subscribes),
+    queryFn: () => getMyCommentaries(user!.uid),
     enabled: !!user?.uid,
   });
 

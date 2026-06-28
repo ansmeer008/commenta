@@ -5,9 +5,10 @@ import { CommentaryFilter, Filter } from "../commentary/CommentaryFilter";
 import { CommentaryList } from "../commentary/CommentaryList";
 import { useAuthStore } from "@/store/authStore";
 import { useQuery } from "@tanstack/react-query";
-import { SubscribeCategory, getSubscribeCategoryList } from "@/apis/subscribe";
-import { Commentary } from "@/apis/commentary";
-import { getCommentaryList } from "@/apis/commentaries";
+import { SubscribeCategory } from "@/types/subscription";
+import { Commentary } from "@/types/commentary";
+import { getUserSubscriptions } from "@/actions/subscription";
+import { getCommentariesByWorkIds } from "@/actions/commentary";
 
 export const FilteredCommentaryList = () => {
   const [unselectedFilterIds, setUnselectedFilterIds] = useState<Set<string>>(() => new Set());
@@ -15,7 +16,7 @@ export const FilteredCommentaryList = () => {
 
   const { data: subscribeList = [] } = useQuery({
     queryKey: ["subscribeList", user?.uid],
-    queryFn: () => getSubscribeCategoryList(user!.uid),
+    queryFn: () => getUserSubscriptions(user!.uid),
     enabled: !!user?.uid,
   });
 
@@ -50,7 +51,7 @@ export const FilteredCommentaryList = () => {
   const filterIds = filterList.filter(item => item.isSelected).map(filter => filter.id);
   const { data: commentaryList = [], isFetching } = useQuery<Commentary[] | null>({
     queryKey: ["commentaryList", filterIds], // 필터 값이 바뀌면 자동으로 refetch
-    queryFn: () => getCommentaryList(filterIds, undefined, user?.subscribes),
+    queryFn: () => getCommentariesByWorkIds(filterIds),
     enabled: filterIds.length > 0, // 필터 초기화가 끝난 후 실행
   });
 

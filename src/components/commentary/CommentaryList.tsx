@@ -1,6 +1,6 @@
 "use client";
 
-import { Commentary } from "@/apis/commentary";
+import { Commentary } from "@/types/commentary";
 import { CommentaryItem } from "./CommentaryItem";
 import { useAuthStore } from "@/store/authStore";
 

@@ -3,25 +3,26 @@
 import { useState } from "react";
 import { Switch } from "../ui/switch";
 import { useAuthStore } from "@/store/authStore";
-import { updateUserData } from "@/apis/userData";
+import { updateUserProfile } from "@/actions/user";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useLoadingStore } from "@/store/loadingStore";
 
 export const NoSpoilerModeSection = () => {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const [isNoSpoilerMode, setIsNoSpoilerMode] = useState(user?.isNoSpoilerMode ?? false);
   const { startLoading, stopLoading } = useLoadingStore();
 
   const { mutate: updateMode, isPending } = useMutation({
     mutationFn: async (mode: boolean) => {
       if (!user) throw new Error("로그인 정보가 없습니다.");
-      return updateUserData(user.uid, { isNoSpoilerMode: mode });
+      return updateUserProfile(user.uid, { isNoSpoilerMode: mode });
     },
     onMutate: () => startLoading(),
     onSettled: () => stopLoading(),
-    onSuccess: () => {
-      toast(`스포일러 방지 모드가 ${isNoSpoilerMode ? "켜졌어요" : "꺼졌어요"}`);
+    onSuccess: (data, mode) => {
+      if (user) setUser({ ...user, isNoSpoilerMode: data.is_no_spoiler_mode });
+      toast(`스포일러 방지 모드가 ${mode ? "켜졌어요" : "꺼졌어요"}`);
     },
     onError: (error: any) => {
       toast.error(error.message || "모드 변경 실패");

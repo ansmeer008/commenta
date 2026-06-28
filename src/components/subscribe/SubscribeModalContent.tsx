@@ -1,14 +1,14 @@
 import { useForm } from "@/hooks/useForm";
 import { Button } from "../ui/button";
-import { Category } from "@/apis/category";
+import { Category } from "@/types/work";
 import { NumberInput } from "../ui/numberInput";
 import { useAuthStore } from "@/store/authStore";
+import { SubscribeCategory } from "@/types/subscription";
 import {
-  SubscribeCategory,
   addSubscription,
-  deleteSubscription,
   updateSubscription,
-} from "@/apis/subscribe";
+  deleteSubscription,
+} from "@/actions/subscription";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
@@ -65,9 +65,8 @@ export const SubscribeModalContent = ({
       close();
     },
     onError: (error: any) => {
-      const errorMsg = error.response.data.error;
       let message = subscribeData ? "구독 수정 실패" : "구독 등록 실패";
-      if (errorMsg === "Already Subscribed") {
+      if (error.message === "Already Subscribed") {
         message = "이미 구독한 작품입니다";
       }
       toast.error(message);
