@@ -5,7 +5,8 @@ import { Badge } from "../ui/badge";
 import { EllipsisVertical, User } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRouteModal } from "@/hooks/useRouteModal";
-import { Commentary, deleteCommentary } from "@/apis/commentary";
+import { Commentary } from "@/types/commentary";
+import { deleteCommentary } from "@/actions/commentary";
 import {
   DropdownMenu,
   DropdownMenuContent,

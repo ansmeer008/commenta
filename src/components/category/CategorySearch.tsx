@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { ListPlus, Plus, Search } from "lucide-react";
 import { Button } from "../ui/button";
-import { Category, addCategory, searchCategoryList } from "@/apis/category";
+import { Category } from "@/types/work";
+import { searchWorks, addWork } from "@/actions/work";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -102,7 +103,7 @@ const AddCategoryModalContent = ({ close }: { close: () => void }) => {
   const { mutate: mutateCategory } = useMutation({
     mutationFn: async () => {
       const { title, author } = values;
-      return await addCategory({ title, author });
+      return await addWork({ title, author });
     },
     onMutate: () => startLoading(),
     onSettled: () => stopLoading(),
@@ -186,7 +187,7 @@ export const CategorySearch = ({
 
   const { data: categoryList = [], isFetching } = useQuery({
     queryKey: ["categorySearch", triggerSearch],
-    queryFn: () => searchCategoryList(triggerSearch),
+    queryFn: () => searchWorks(triggerSearch),
     enabled: !!triggerSearch,
   });
 

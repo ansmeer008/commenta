@@ -6,14 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "../ui/button";
 import { useForm } from "@/hooks/useForm";
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import axios from "axios";
-import { fetchUserData } from "@/apis/userData";
 import { useAuthStore } from "@/store/authStore";
 import { checkEmailFormat, checkPasswordFormat } from "@/utils/validation";
+import { signUpWithEmail } from "@/actions/auth";
 
 export default function SignUpForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
@@ -40,27 +37,25 @@ export default function SignUpForm({ close }: { close?: () => void }) {
     }
 
     try {
-      const { data } = await axios.post("/api/auth/signup", {
-        email: values.email,
-        password: values.password,
-        nickname: values.nickname,
-      });
+      const result = await signUpWithEmail(values.email, values.password, values.nickname);
 
-      if (!data?.uid) {
-        // 서버에서 예상치 못한 응답이 온 경우
-        toast.error("회원가입에 실패했습니다.");
+      if (!result.success || !result.user) {
+        toast.error(result.error || "회원가입에 실패했습니다.");
         return;
       }
 
-      toast.success("회원가입 완료! 자동 로그인 중...");
+      toast.success("회원가입 완료!");
 
-      await signInWithEmailAndPassword(auth, values.email, values.password);
-
-      const userData = await fetchUserData(data.uid);
-      if (userData) {
-        useAuthStore.getState().setIsLoggedIn(true);
-        useAuthStore.getState().setUser(userData);
-      }
+      useAuthStore.getState().setIsLoggedIn(true);
+      useAuthStore.getState().setUser({
+        uid: result.user.id,
+        email: result.user.email || "",
+        nickname: result.user.nickname,
+        createdAt: new Date(result.user.created_at),
+        subscribes: [],
+        isNoSpoilerMode: result.user.is_no_spoiler_mode,
+        profileUrl: result.user.profile_url,
+      });
 
       setErrorMsg("");
       if (close) close();

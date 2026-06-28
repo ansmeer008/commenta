@@ -1,8 +1,8 @@
 "use client";
 
-import { getCategoriesByCount } from "@/apis/category";
+import { getWorksByCount } from "@/actions/work";
 import { Badge } from "../ui/badge";
-import type { Category } from "@/apis/category";
+import type { Category } from "@/types/work";
 import { Flame, ChevronDown, ChevronUp } from "lucide-react";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
 import { SubscribeModalContent } from "../subscribe/SubscribeModalContent";
@@ -26,13 +26,13 @@ export const CategoryRecommender = () => {
 
   const { data: usageTop5 = [] } = useQuery<Category[] | null>({
     queryKey: ["categories", "usageTop5"],
-    queryFn: () => getCategoriesByCount("usage"),
+    queryFn: () => getWorksByCount("usage"),
     staleTime: 1000 * 60 * 5, // 5분 캐싱
   });
 
   const { data: subscribeTop5 = [] } = useQuery<Category[] | null>({
     queryKey: ["categories", "subscribeTop5"],
-    queryFn: () => getCategoriesByCount("subscribe"),
+    queryFn: () => getWorksByCount("subscribe"),
     staleTime: 1000 * 60 * 5,
   });
 

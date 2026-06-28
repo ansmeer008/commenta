@@ -78,15 +78,7 @@ export const Guide = ({ children }: { children?: React.ReactNode }) => {
 
   return (
     <div className="flex flex-col items-center px-8 pb-8">
-      <div className="relative w-120 h-30">
-        <Image
-          src="https://firebasestorage.googleapis.com/v0/b/commenta-b0743.firebasestorage.app/o/assets%2FCommenta_logo.png?alt=media&token=d6105a26-7777-493b-b053-74cbbf81cb4d"
-          alt="Commenta logo"
-          fill
-          style={{ objectFit: "cover" }}
-          priority
-        />
-      </div>
+      <h1 className="text-3xl font-bold text-center text-gray-900 py-10">COMMENTA</h1>
       <section>
         <h2 className="text-xl font-bold text-center text-gray-600">
           다양한 사람들과 코멘터리를 나눠보세요

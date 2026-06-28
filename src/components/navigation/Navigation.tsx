@@ -7,7 +7,7 @@ import { useAuthStore } from "@/store/authStore";
 import { CategorySearch } from "../category/CategorySearch";
 import { useSimpleModal } from "@/hooks/useSimpleModal";
 import { SubscribeModalContent } from "../subscribe/SubscribeModalContent";
-import { Category } from "@/apis/category";
+import { Category } from "@/types/work";
 
 export const Navigation = () => {
   const pathname = usePathname();

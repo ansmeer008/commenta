@@ -8,9 +8,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useRouteModal } from "@/hooks/useRouteModal";
 import { useLoadingStore } from "@/store/loadingStore";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuthStore } from "@/store/authStore";
 import { Eye, EyeOff } from "lucide-react";
-import { auth } from "@/lib/firebase";
+import { signInWithEmail } from "@/actions/auth";
 
 export default function LoginForm({ close }: { close?: () => void }) {
   const [errorMsg, setErrorMsg] = useState("");
@@ -31,7 +31,22 @@ export default function LoginForm({ close }: { close?: () => void }) {
         return toast("check email or password");
       }
 
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+      const result = await signInWithEmail(values.email, values.password);
+
+      if (!result.success || !result.user) {
+        throw new Error(result.error);
+      }
+
+      useAuthStore.getState().setIsLoggedIn(true);
+      useAuthStore.getState().setUser({
+        uid: result.user.id,
+        email: result.user.email || "",
+        nickname: result.user.nickname,
+        createdAt: new Date(result.user.created_at),
+        subscribes: [],
+        isNoSpoilerMode: result.user.is_no_spoiler_mode,
+        profileUrl: result.user.profile_url,
+      });
 
       setErrorMsg("");
       if (close) {
